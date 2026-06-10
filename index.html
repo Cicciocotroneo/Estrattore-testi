@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Book Cleaner - E-Reader</title>
+    <title>AI Book Cleaner - Diagnostico</title>
     
     <!-- PDF.js per l'estrazione locale del testo -->
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 
     <style>
-        /* CSS Nativo Premium - Nessuna dipendenza esterna da Tailwind */
         :root {
             --bg-main: #f8fafc;
             --bg-card: #ffffff;
@@ -20,6 +19,7 @@
             --primary-hover: #4338ca;
             --success: #10b981;
             --danger: #f43f5e;
+            --warning: #f59e0b;
             --accent-bg: #e0e7ff;
             --accent-text: #4338ca;
         }
@@ -186,7 +186,6 @@
         .option-text p { font-size: 13px; font-weight: 600; }
         .option-text span { font-size: 10px; color: var(--text-muted); display: block; margin-top: 2px; }
         
-        /* Checkbox stilizzato nativo per facilitare il touch */
         input[type="checkbox"] {
             width: 22px;
             height: 22px;
@@ -219,6 +218,27 @@
             margin-bottom: 14px;
             font-size: 11px;
             line-height: 1.4;
+        }
+
+        .diagnostic-box {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            display: none;
+            word-break: break-all;
+        }
+        
+        .diagnostic-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .diagnostic-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
         }
 
         .progress-container { 
@@ -281,7 +301,6 @@
             line-height: 1.5;
         }
 
-        /* Footer flottante con i bottoni principali */
         .footer-controls { 
             position: fixed; 
             bottom: 0; 
@@ -350,7 +369,7 @@
             align-items: center; 
             justify-content: center; 
             cursor: pointer; 
-            transition: transform 0.1s;
+            transition: transform(0.1s);
         }
 
         button.action-icon-btn:active {
@@ -388,7 +407,6 @@
             transform: translate(-50%, -5px);
         }
 
-        /* SVG icon alignment */
         svg {
             display: inline-block;
             vertical-align: middle;
@@ -402,21 +420,19 @@
         <header>
             <div class="logo-section">
                 <div class="icon-badge">
-                    <!-- Icona Sparkles / AI in SVG -->
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
                 </div>
                 <div>
                     <h1>AI Book Cleaner</h1>
-                    <p class="subtitle">E-Reader & Correzione OCR</p>
+                    <p class="subtitle">E-Reader & Diagnostica API</p>
                 </div>
             </div>
             <button id="themeToggle" class="theme-btn" title="Cambia tema">
-                <!-- Icona Sole/Luna SVG -->
                 <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
             </button>
         </header>
 
-        <!-- Configurazione API -->
+        <!-- Configurazione API con Diagnostica Integrata -->
         <div class="panel">
             <div class="panel-title">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -424,13 +440,20 @@
             </div>
             
             <div class="api-badge">
-                L'applicazione richiede una chiave API di Gemini per correggere il testo. Ottienila gratuitamente su <a href="https://aistudio.google.com/" target="_blank" style="color:var(--accent-text); font-weight:bold; text-decoration:underline;">Google AI Studio</a>.
+                Inserisci la chiave API creata su <a href="https://aistudio.google.com/" target="_blank" style="color:var(--accent-text); font-weight:bold; text-decoration:underline;">Google AI Studio</a>. L'applicazione utilizzerà il modello <b>gemini-2.5-flash</b>.
             </div>
 
-            <div style="display:flex; gap:8px;">
+            <div style="display:flex; gap:8px; margin-bottom:10px;">
                 <input type="password" id="apiKeyInput" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-main); font-size:12px; outline:none;" placeholder="Incolla API Key (AIzaSy...)">
                 <button id="saveKeyBtn" style="padding:10px 14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; font-size:12px; cursor:pointer;">Salva</button>
             </div>
+
+            <button id="testApiBtn" style="width:100%; padding:10px; background:transparent; border:1px solid var(--border-color); color:var(--text-main); border-radius:10px; font-weight:600; font-size:12px; cursor:pointer; transition: background-color 0.1s;">
+                🧪 Testa Connessione API
+            </button>
+
+            <!-- Box di diagnostica per gli errori -->
+            <div id="diagnosticOutput" class="diagnostic-box"></div>
         </div>
 
         <!-- Caricamento File -->
@@ -479,7 +502,7 @@
             <div class="option-group" style="margin-bottom:0;">
                 <div class="option-text">
                     <p>Ignora numeri di pagina</p>
-                    <span>Rileva e rimuove le cifre isolateti fine riga</span>
+                    <span>Rileva e rimuove le cifre isolate di fine riga</span>
                 </div>
                 <input type="checkbox" id="removePageNumbers" checked>
             </div>
@@ -532,7 +555,7 @@
             pdfjsLib.GlobalWorkerOptions.workerSrc = '';
         }
 
-        // Chiave API di fallback integrata a runtime
+        // Chiave di sistema pre-configurata dall'ambiente (se presente)
         const systemApiKey = "";
 
         // Elementi HTML
@@ -559,6 +582,8 @@
 
         const apiKeyInput = document.getElementById('apiKeyInput');
         const saveKeyBtn = document.getElementById('saveKeyBtn');
+        const testApiBtn = document.getElementById('testApiBtn');
+        const diagnosticOutput = document.getElementById('diagnosticOutput');
 
         const aiCorrectToggle = document.getElementById('aiCorrectToggle');
         const fixHyphensCheck = document.getElementById('fixHyphens');
@@ -568,14 +593,14 @@
         let extractedText = "";
         let isProcessing = false;
 
-        // Gestione Toast robusto
+        // Gestione Toast
         function showToast(msg) {
             toast.textContent = msg;
             toast.classList.add('show');
             setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
-        // Salvataggio della chiave dell'utente in memoria locale persistente
+        // Recupero chiave utente salvata
         const savedKey = localStorage.getItem('local_gemini_api_key');
         if (savedKey) {
             apiKeyInput.value = savedKey;
@@ -591,6 +616,54 @@
                 showToast("Chiave rimossa");
             }
         });
+
+        // Esecuzione Diagnostica della Chiave API
+        testApiBtn.addEventListener('click', async () => {
+            const activeKey = apiKeyInput.value.trim() || systemApiKey;
+            if (!activeKey) {
+                showDiagnostic("Inserisci prima una chiave API valida.", "error");
+                return;
+            }
+
+            testApiBtn.disabled = true;
+            testApiBtn.textContent = "⏳ Connessione in corso...";
+            showDiagnostic("Invio di un pacchetto di test a Google...", "success");
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: "Rispondi solo con la parola 'OK' se leggi questo messaggio." }] }]
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const resJson = await response.json();
+
+                if (response.ok) {
+                    const reply = resJson.candidates?.[0]?.content?.parts?.[0]?.text;
+                    showDiagnostic(`Connessione riuscita! Il modello ha risposto: "${reply?.trim()}"`, "success");
+                } else {
+                    const errDetails = resJson.error?.message || `Errore HTTP ${response.status}`;
+                    const errCode = resJson.error?.status || "UNKNOWN";
+                    showDiagnostic(`Errore di Google API [${errCode}]: ${errDetails}`, "error");
+                }
+            } catch (err) {
+                showDiagnostic(`Impossibile raggiungere i server di Google. Verifica la tua connessione internet o le restrizioni locali del tuo browser. Dettaglio: ${err.message}`, "error");
+            } finally {
+                testApiBtn.disabled = false;
+                testApiBtn.textContent = "🧪 Testa Connessione API";
+            }
+        });
+
+        function showDiagnostic(msg, type) {
+            diagnosticOutput.style.display = "block";
+            diagnosticOutput.textContent = msg;
+            diagnosticOutput.className = `diagnostic-box ${type === 'success' ? 'diagnostic-success' : 'diagnostic-error'}`;
+        }
 
         // Toggle del Tema Scuro/Chiaro
         if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -649,9 +722,9 @@
             mainActionBtn.querySelector('span').textContent = "Carica un PDF";
         }
 
-        // Chiamata all'API di Google Gemini per ottimizzare la pagina
+        // Chiamata all'API di Google Gemini (Usa gemini-2.5-flash)
         async function correctPageWithGemini(text, key) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
             
             const systemPrompt = "Sei un correttore di bozze. Correggi il testo fornito, che proviene da una scansione OCR imperfetta di un libro d'epoca italiano ('La guerra e le arti sanitarie'). " +
                                  "Risolvi i caratteri corrotti (es. l?uomo -> l'uomo, perch? -> perché) ed elimina i frammenti spuri dovuti al rumore della scansione. " +
@@ -671,12 +744,16 @@
                         body: JSON.stringify(payload)
                     });
 
-                    if (!response.ok) throw new Error(`Status ${response.status}`);
+                    if (!response.ok) {
+                        const errJson = await response.json().catch(() => ({}));
+                        const errMsg = errJson.error?.message || `HTTP ${response.status}`;
+                        throw new Error(errMsg);
+                    }
                     
                     const resJson = await response.json();
                     const clean = resJson.candidates?.[0]?.content?.parts?.[0]?.text;
                     if (clean) return clean.trim();
-                    throw new Error("Risposta vuota");
+                    throw new Error("Risposta vuota dall'API.");
                 } catch (e) {
                     if (i === 4) throw e;
                     await new Promise(r => setTimeout(r, retryDelay));
@@ -694,16 +771,13 @@
                 return;
             }
 
-            // CONTROLLO DI SICUREZZA 1: Verifica che pdf.js si sia caricato correttamente offline
             if (typeof pdfjsLib === 'undefined') {
-                alert("La libreria PDF.js non è stata caricata. Assicurati che il telefono sia connesso a Internet al primo avvio per consentire al browser di scaricare e salvare la libreria di Mozilla in cache.");
+                alert("La libreria PDF.js non è stata caricata. Assicurati che il telefono sia connesso a Internet al primo avvio.");
                 return;
             }
 
-            // Recupera la chiave API (quella utente ha la priorità)
             const activeKey = apiKeyInput.value.trim() || systemApiKey;
 
-            // CONTROLLO DI SICUREZZA 2: Verifica che l'utente abbia inserito la chiave se l'AI è attiva
             if (aiCorrectToggle.checked && !activeKey) {
                 showToast("Errore: Inserisci e salva la tua Chiave API prima di iniziare!");
                 return;
@@ -728,7 +802,6 @@
                     try {
                         const arrayBuffer = new Uint8Array(this.result);
                         
-                        // Avvio parsing del PDF disabilitando esplicitamente i worker
                         const loadingTask = pdfjsLib.getDocument({
                             data: arrayBuffer,
                             disableWorker: true,
@@ -777,14 +850,13 @@
 
                             rawPages.push(pageString);
 
-                            // Mostra il progresso dell'estrazione locale
                             const pcent = Math.round((pageNum / totalPages) * 100);
                             progressBar.style.width = pcent + "%";
                             progressPercent.textContent = pcent + "%";
                             pageCounter.textContent = `Lettura: Pagina ${pageNum} di ${totalPages}`;
                         }
 
-                        // 2. Correzione AI sequenziale tramite API di Gemini
+                        // 2. Correzione AI
                         let finalPages = [];
                         if (aiCorrectToggle.checked) {
                             progressStatus.textContent = "Pulizia e correzione con AI...";
@@ -802,6 +874,7 @@
                                         processedText = await correctPageWithGemini(rawPages[i], activeKey);
                                     } catch (err) {
                                         console.warn(`Errore AI a pagina ${i + 1}, mantengo testo grezzo`, err);
+                                        showToast(`Nota: Pagina ${i + 1} mantenuta originale per timeout API.`);
                                     }
                                 }
                                 finalPages.push(processedText);
@@ -854,7 +927,6 @@
             showToast("Libro elaborato correttamente!");
         }
 
-        // Download del file di testo
         downloadBtn.addEventListener('click', () => {
             if (!extractedText) return;
             const blob = new Blob([extractedText], { type: 'text/plain;charset=utf-8' });
@@ -869,7 +941,6 @@
             URL.revokeObjectURL(url);
         });
 
-        // Copia veloce
         copyBtn.addEventListener('click', () => {
             if (!extractedText) return;
             const textarea = document.createElement("textarea");
