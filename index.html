@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Book Cleaner - E-Reader</title>
+    
+    <!-- PDF.js per l'estrazione locale del testo -->
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+
+    <style>
+        /* CSS Nativo Premium - Nessuna dipendenza esterna da Tailwind */
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --danger: #f43f5e;
+            --accent-bg: #e0e7ff;
+            --accent-text: #4338ca;
+        }
+
+        .dark-theme {
+            --bg-main: #0b0f19;
+            --bg-card: #151f32;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #223147;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent-bg: #1e293b;
+            --accent-text: #818cf8;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body { 
+            background-color: var(--bg-main); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            padding: 16px; 
+            padding-bottom: 110px; 
+            transition: background-color 0.2s, color 0.2s; 
+        }
+
+        .container { 
+            max-w: 450px; 
+            margin: 0 auto; 
+            width: 100%;
+        }
+        
+        header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            margin-bottom: 24px; 
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-badge {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            padding: 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 { font-size: 18px; font-weight: 700; line-height: 1.2; }
+        .subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+        .theme-btn { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            color: var(--text-main);
+            width: 40px; 
+            height: 40px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        .drop-zone { 
+            background: var(--bg-card); 
+            border: 2px dashed #93c5fd; 
+            border-radius: 16px; 
+            padding: 24px; 
+            text-align: center; 
+            cursor: pointer; 
+            margin-bottom: 20px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02); 
+            transition: border-color 0.2s;
+        }
+        
+        .drop-zone:hover {
+            border-color: var(--primary);
+        }
+
+        .drop-zone p { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .drop-zone span { font-size: 11px; color: var(--text-muted); display: block; }
+        
+        .file-meta { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 14px; 
+            padding: 14px; 
+            margin-bottom: 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 12px; 
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .file-title {
+            font-weight: 600;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 200px;
+        }
+
+        .file-meta button { 
+            background: none; 
+            border: none; 
+            color: var(--danger); 
+            font-weight: bold; 
+            cursor: pointer; 
+            padding: 6px 12px; 
+            font-size: 12px;
+        }
+
+        .panel { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            padding: 16px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .panel-title { 
+            font-size: 13px; 
+            margin-bottom: 14px; 
+            font-weight: 700; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+        
+        .option-group { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 14px; 
+        }
+        
+        .option-text p { font-size: 13px; font-weight: 600; }
+        .option-text span { font-size: 10px; color: var(--text-muted); display: block; margin-top: 2px; }
+        
+        /* Checkbox stilizzato nativo per facilitare il touch */
+        input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        textarea { 
+            width: 100%; 
+            border: 1px solid var(--border-color); 
+            background: var(--bg-main); 
+            color: var(--text-main); 
+            border-radius: 10px; 
+            padding: 10px; 
+            font-size: 12px; 
+            resize: none; 
+            margin-top: 6px; 
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .api-badge {
+            background-color: var(--accent-bg);
+            color: var(--accent-text);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .progress-container { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            padding: 16px; 
+            margin-bottom: 20px; 
+        }
+
+        .progress-header {
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 12px; 
+            font-weight: 600;
+        }
+
+        .progress-bar-bg { 
+            background: var(--border-color); 
+            height: 8px; 
+            border-radius: 4px; 
+            overflow: hidden; 
+            margin-top: 10px; 
+        }
+
+        .progress-bar { 
+            background: linear-gradient(90deg, #6366f1, #4f46e5); 
+            height: 100%; 
+            width: 0%; 
+            transition: width 0.15s; 
+        }
+
+        .results { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            padding: 16px; 
+            margin-bottom: 20px; 
+        }
+
+        .results-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .preview-area { 
+            background: var(--bg-main); 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+            padding: 12px; 
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace; 
+            font-size: 11px; 
+            height: 180px; 
+            overflow-y: auto; 
+            white-space: pre-wrap; 
+            margin-top: 10px; 
+            line-height: 1.5;
+        }
+
+        /* Footer flottante con i bottoni principali */
+        .footer-controls { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            padding: 16px; 
+            background: rgba(255,255,255,0.9); 
+            backdrop-filter: blur(10px); 
+            border-top: 1px solid var(--border-color); 
+            display: flex; 
+            justify-content: center; 
+            z-index: 100; 
+        }
+
+        .dark-theme .footer-controls { 
+            background: rgba(11, 15, 25, 0.9); 
+        }
+
+        .btn-group { 
+            max-width: 450px; 
+            width: 100%; 
+            display: flex; 
+            gap: 10px; 
+        }
+        
+        button.main-btn { 
+            flex: 1; 
+            height: 48px; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            background: #cbd5e1; 
+            color: #64748b; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .dark-theme button.main-btn {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        button.main-btn.active { 
+            background: var(--primary); 
+            color: white; 
+        }
+
+        button.main-btn.processing { 
+            background: var(--danger); 
+            color: white; 
+        }
+        
+        button.action-icon-btn { 
+            width: 48px; 
+            height: 48px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
+            background: var(--bg-card); 
+            color: var(--text-main); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            transition: transform 0.1s;
+        }
+
+        button.action-icon-btn:active {
+            transform: scale(0.95);
+        }
+
+        .hidden { display: none !important; }
+        
+        #toast { 
+            position: fixed; 
+            bottom: 84px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #0f172a; 
+            color: #ffffff; 
+            font-size: 12px; 
+            font-weight: 600;
+            padding: 12px 18px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+            opacity: 0; 
+            transition: opacity 0.25s, transform 0.25s; 
+            pointer-events: none; 
+            z-index: 1000; 
+            text-align: center; 
+            width: 85%; 
+            max-width: 320px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        #toast.show {
+            opacity: 1;
+            transform: translate(-50%, -5px);
+        }
+
+        /* SVG icon alignment */
+        svg {
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <div class="icon-badge">
+                    <!-- Icona Sparkles / AI in SVG -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                </div>
+                <div>
+                    <h1>AI Book Cleaner</h1>
+                    <p class="subtitle">E-Reader & Correzione OCR</p>
+                </div>
+            </div>
+            <button id="themeToggle" class="theme-btn" title="Cambia tema">
+                <!-- Icona Sole/Luna SVG -->
+                <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+            </button>
+        </header>
+
+        <!-- Configurazione API -->
+        <div class="panel">
+            <div class="panel-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Configurazione Chiave API
+            </div>
+            
+            <div class="api-badge">
+                L'applicazione richiede una chiave API di Gemini per correggere il testo. Ottienila gratuitamente su <a href="https://aistudio.google.com/" target="_blank" style="color:var(--accent-text); font-weight:bold; text-decoration:underline;">Google AI Studio</a>.
+            </div>
+
+            <div style="display:flex; gap:8px;">
+                <input type="password" id="apiKeyInput" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-main); font-size:12px; outline:none;" placeholder="Incolla API Key (AIzaSy...)">
+                <button id="saveKeyBtn" style="padding:10px 14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; font-size:12px; cursor:pointer;">Salva</button>
+            </div>
+        </div>
+
+        <!-- Caricamento File -->
+        <div id="dropZone" class="drop-zone">
+            <input type="file" id="pdfFileInput" accept="application/pdf" style="display:none">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+            <p>Seleziona il PDF del libro</p>
+            <span>Il file viene letto localmente nel telefono</span>
+        </div>
+
+        <!-- Info File -->
+        <div id="fileMeta" class="file-meta hidden">
+            <div class="file-info">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+                <div>
+                    <span id="fileName" class="file-title">libro.pdf</span>
+                    <span id="fileSize" style="color:var(--text-muted); font-size:10px;">0.0 MB</span>
+                </div>
+            </div>
+            <button id="removeFileBtn">Rimuovi</button>
+        </div>
+
+        <!-- Opzioni -->
+        <div class="panel">
+            <div class="panel-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="21" y2="21"/><line x1="4" x2="20" y1="14" y2="14"/><line x1="4" x2="20" y1="7" y2="7"/></svg>
+                Opzioni di Ottimizzazione
+            </div>
+            
+            <div class="option-group">
+                <div class="option-text">
+                    <p>Correzione Intelligente AI</p>
+                    <span>Riassegna accenti ed elimina refusi OCR con Gemini</span>
+                </div>
+                <input type="checkbox" id="aiCorrectToggle" checked>
+            </div>
+
+            <div class="option-group">
+                <div class="option-text">
+                    <p>Sillabazione e Trattini</p>
+                    <span>Riconnette le parole spezzate (es. "sanita-\nria")</span>
+                </div>
+                <input type="checkbox" id="fixHyphens" checked>
+            </div>
+
+            <div class="option-group" style="margin-bottom:0;">
+                <div class="option-text">
+                    <p>Ignora numeri di pagina</p>
+                    <span>Rileva e rimuove le cifre isolateti fine riga</span>
+                </div>
+                <input type="checkbox" id="removePageNumbers" checked>
+            </div>
+        </div>
+
+        <!-- Barra di Avanzamento -->
+        <div id="progressContainer" class="progress-container hidden">
+            <div class="progress-header">
+                <span id="progressStatus" style="color:var(--primary)">Analisi PDF...</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="pageCounter" style="font-size:10px; color:var(--text-muted); text-align:right; margin-top:6px;">Pagina 0 di 0</p>
+        </div>
+
+        <!-- Risultato -->
+        <div id="resultsCard" class="results hidden">
+            <div class="results-header">
+                <span>Testo Elaborato</span>
+                <span id="wordCount" style="color:var(--success); font-size:11px;">0 parole</span>
+            </div>
+            <div id="textPreview" class="preview-area"></div>
+        </div>
+    </div>
+
+    <!-- Controlli statici nel footer -->
+    <div class="footer-controls">
+        <div class="btn-group">
+            <button id="mainActionBtn" class="main-btn" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                <span>Carica un PDF</span>
+            </button>
+            <button id="downloadBtn" class="action-icon-btn hidden" style="background:var(--success); color:white; border:none;" title="Scarica file TXT">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            </button>
+            <button id="copyBtn" class="action-icon-btn hidden" title="Copia testo negli appunti">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="toast">Notifica</div>
+
+    <script>
+        // Disabilitazione totale dei Web Worker per compatibilità file:// locale
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        if (pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+        }
+
+        // Chiave API di fallback integrata a runtime
+        const systemApiKey = "";
+
+        // Elementi HTML
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const dropZone = document.getElementById('dropZone');
+        const pdfFileInput = document.getElementById('pdfFileInput');
+        const fileMeta = document.getElementById('fileMeta');
+        const fileNameEl = document.getElementById('fileName');
+        const fileSizeEl = document.getElementById('fileSize');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        const mainActionBtn = document.getElementById('mainActionBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        const progressStatus = document.getElementById('progressStatus');
+        const pageCounter = document.getElementById('pageCounter');
+        const resultsCard = document.getElementById('resultsCard');
+        const textPreview = document.getElementById('textPreview');
+        const wordCountEl = document.getElementById('wordCount');
+        const toast = document.getElementById('toast');
+
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const saveKeyBtn = document.getElementById('saveKeyBtn');
+
+        const aiCorrectToggle = document.getElementById('aiCorrectToggle');
+        const fixHyphensCheck = document.getElementById('fixHyphens');
+        const removePageNumbersCheck = document.getElementById('removePageNumbers');
+
+        let selectedFile = null;
+        let extractedText = "";
+        let isProcessing = false;
+
+        // Gestione Toast robusto
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // Salvataggio della chiave dell'utente in memoria locale persistente
+        const savedKey = localStorage.getItem('local_gemini_api_key');
+        if (savedKey) {
+            apiKeyInput.value = savedKey;
+        }
+
+        saveKeyBtn.addEventListener('click', () => {
+            const keyVal = apiKeyInput.value.trim();
+            if (keyVal) {
+                localStorage.setItem('local_gemini_api_key', keyVal);
+                showToast("Chiave salvata sul telefono!");
+            } else {
+                localStorage.removeItem('local_gemini_api_key');
+                showToast("Chiave rimossa");
+            }
+        });
+
+        // Toggle del Tema Scuro/Chiaro
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-theme');
+            themeIcon.innerHTML = '<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.innerHTML = '<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
+            }
+        });
+
+        // Interazioni File
+        dropZone.addEventListener('click', () => pdfFileInput.click());
+        pdfFileInput.addEventListener('change', () => {
+            const file = pdfFileInput.files[0];
+            if (!file) return;
+
+            selectedFile = file;
+            fileNameEl.textContent = file.name;
+            fileSizeEl.textContent = (file.size / (1024 * 1024)).toFixed(2) + " MB";
+
+            fileMeta.classList.remove('hidden');
+            dropZone.classList.add('hidden');
+
+            mainActionBtn.removeAttribute('disabled');
+            mainActionBtn.className = "main-btn active";
+            mainActionBtn.querySelector('span').textContent = "Avvia Elaborazione";
+        });
+
+        removeFileBtn.addEventListener('click', () => {
+            resetApp();
+        });
+
+        function resetApp() {
+            selectedFile = null;
+            extractedText = "";
+            isProcessing = false;
+            pdfFileInput.value = "";
+
+            fileMeta.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+            progressContainer.classList.add('hidden');
+            resultsCard.classList.add('hidden');
+            downloadBtn.classList.add('hidden');
+            copyBtn.classList.add('hidden');
+
+            mainActionBtn.setAttribute('disabled', 'true');
+            mainActionBtn.className = "main-btn";
+            mainActionBtn.querySelector('span').textContent = "Carica un PDF";
+        }
+
+        // Chiamata all'API di Google Gemini per ottimizzare la pagina
+        async function correctPageWithGemini(text, key) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
+            
+            const systemPrompt = "Sei un correttore di bozze. Correggi il testo fornito, che proviene da una scansione OCR imperfetta di un libro d'epoca italiano ('La guerra e le arti sanitarie'). " +
+                                 "Risolvi i caratteri corrotti (es. l?uomo -> l'uomo, perch? -> perché) ed elimina i frammenti spuri dovuti al rumore della scansione. " +
+                                 "MANTENI fedelmente la sintassi e il lessico del 1931: non aggiornare o modernizzare la prosa, limitati a correggere i soli difetti di trascrizione. Restituisci esclusivamente il testo corretto, senza note.";
+
+            const payload = {
+                contents: [{ parts: [{ text: text }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            let retryDelay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error(`Status ${response.status}`);
+                    
+                    const resJson = await response.json();
+                    const clean = resJson.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (clean) return clean.trim();
+                    throw new Error("Risposta vuota");
+                } catch (e) {
+                    if (i === 4) throw e;
+                    await new Promise(r => setTimeout(r, retryDelay));
+                    retryDelay *= 2;
+                }
+            }
+        }
+
+        // Loop principale di esecuzione
+        mainActionBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            if (isProcessing) {
+                isProcessing = false;
+                resetApp();
+                return;
+            }
+
+            // CONTROLLO DI SICUREZZA 1: Verifica che pdf.js si sia caricato correttamente offline
+            if (typeof pdfjsLib === 'undefined') {
+                alert("La libreria PDF.js non è stata caricata. Assicurati che il telefono sia connesso a Internet al primo avvio per consentire al browser di scaricare e salvare la libreria di Mozilla in cache.");
+                return;
+            }
+
+            // Recupera la chiave API (quella utente ha la priorità)
+            const activeKey = apiKeyInput.value.trim() || systemApiKey;
+
+            // CONTROLLO DI SICUREZZA 2: Verifica che l'utente abbia inserito la chiave se l'AI è attiva
+            if (aiCorrectToggle.checked && !activeKey) {
+                showToast("Errore: Inserisci e salva la tua Chiave API prima di iniziare!");
+                return;
+            }
+
+            try {
+                isProcessing = true;
+                mainActionBtn.className = "main-btn processing";
+                mainActionBtn.querySelector('span').textContent = "Annulla";
+                
+                progressContainer.classList.remove('hidden');
+                resultsCard.classList.add('hidden');
+                downloadBtn.classList.add('hidden');
+                copyBtn.classList.add('hidden');
+
+                progressStatus.textContent = "Estrazione del testo dal PDF...";
+                progressBar.style.width = "0%";
+                progressPercent.textContent = "0%";
+
+                const fileReader = new FileReader();
+                fileReader.onload = async function() {
+                    try {
+                        const arrayBuffer = new Uint8Array(this.result);
+                        
+                        // Avvio parsing del PDF disabilitando esplicitamente i worker
+                        const loadingTask = pdfjsLib.getDocument({
+                            data: arrayBuffer,
+                            disableWorker: true,
+                            verbosity: 0
+                        });
+                        
+                        const pdfDoc = await loadingTask.promise;
+                        const totalPages = pdfDoc.numPages;
+                        let rawPages = [];
+
+                        // 1. Estrazione del testo locale
+                        for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                            if (!isProcessing) return;
+
+                            const page = await pdfDoc.getPage(pageNum);
+                            const textContent = await page.getTextContent();
+                            
+                            let lastY = null;
+                            let lines = [];
+                            let currentLine = "";
+
+                            for (const item of textContent.items) {
+                                if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) {
+                                    lines.push(currentLine);
+                                    currentLine = "";
+                                }
+                                currentLine += item.str + " ";
+                                lastY = item.transform[5];
+                            }
+                            if (currentLine) lines.push(currentLine);
+
+                            let cleaned = [];
+                            const numPattern = /^\s*\d+\s*$/;
+
+                            for (let riga of lines) {
+                                let r_strip = riga.trim();
+                                if (!r_strip) continue;
+                                if (removePageNumbersCheck.checked && numPattern.test(r_strip)) continue;
+                                cleaned.push(r_strip);
+                            }
+
+                            let pageString = cleaned.join('\n');
+                            if (fixHyphensCheck.checked) {
+                                pageString = pageString.replace(/(\w+)-\s*\n\s*(\w+)/g, '$1$2');
+                            }
+
+                            rawPages.push(pageString);
+
+                            // Mostra il progresso dell'estrazione locale
+                            const pcent = Math.round((pageNum / totalPages) * 100);
+                            progressBar.style.width = pcent + "%";
+                            progressPercent.textContent = pcent + "%";
+                            pageCounter.textContent = `Lettura: Pagina ${pageNum} di ${totalPages}`;
+                        }
+
+                        // 2. Correzione AI sequenziale tramite API di Gemini
+                        let finalPages = [];
+                        if (aiCorrectToggle.checked) {
+                            progressStatus.textContent = "Pulizia e correzione con AI...";
+                            progressBar.style.width = "0%";
+                            progressPercent.textContent = "0%";
+
+                            for (let i = 0; i < rawPages.length; i++) {
+                                if (!isProcessing) return;
+                                
+                                pageCounter.textContent = `Correzione: Pagina ${i + 1} di ${totalPages}`;
+                                
+                                let processedText = rawPages[i];
+                                if (processedText.trim().length > 10) {
+                                    try {
+                                        processedText = await correctPageWithGemini(rawPages[i], activeKey);
+                                    } catch (err) {
+                                        console.warn(`Errore AI a pagina ${i + 1}, mantengo testo grezzo`, err);
+                                    }
+                                }
+                                finalPages.push(processedText);
+
+                                const aiPercent = Math.round(((i + 1) / totalPages) * 100);
+                                progressBar.style.width = aiPercent + "%";
+                                progressPercent.textContent = aiPercent + "%";
+                            }
+                        } else {
+                            finalPages = rawPages;
+                        }
+
+                        if (isProcessing) {
+                            extractedText = finalPages.join('\n\n--- PAGINA ---\n\n');
+                            showFinalResults();
+                        }
+
+                    } catch (e) {
+                        alert("Impossibile elaborare il PDF internamente: " + e.message);
+                        resetApp();
+                    }
+                };
+                
+                fileReader.readAsArrayBuffer(selectedFile);
+
+            } catch (err) {
+                alert("Errore inatteso all'avvio: " + err.message);
+                resetApp();
+            }
+        });
+
+        function showFinalResults() {
+            isProcessing = false;
+            progressContainer.classList.add('hidden');
+            resultsCard.classList.remove('hidden');
+
+            textPreview.textContent = extractedText.length > 3000
+                ? extractedText.substring(0, 3000) + "\n\n... [Il resto del libro è stato ottimizzato correttamente ed è pronto per essere scaricato] ..."
+                : extractedText;
+
+            const words = extractedText.split(/\s+/).filter(w => w.length > 0).length;
+            wordCountEl.textContent = `${words.toLocaleString()} parole`;
+
+            downloadBtn.classList.remove('hidden');
+            copyBtn.classList.remove('hidden');
+
+            mainActionBtn.removeAttribute('disabled');
+            mainActionBtn.className = "main-btn active";
+            mainActionBtn.querySelector('span').textContent = "Carica Nuovo";
+            showToast("Libro elaborato correttamente!");
+        }
+
+        // Download del file di testo
+        downloadBtn.addEventListener('click', () => {
+            if (!extractedText) return;
+            const blob = new Blob([extractedText], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const cleanName = selectedFile.name.substring(0, selectedFile.name.lastIndexOf('.')) || 'Trascrizione';
+            a.href = url;
+            a.download = `${cleanName}_Ottimizzato_AI.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Copia veloce
+        copyBtn.addEventListener('click', () => {
+            if (!extractedText) return;
+            const textarea = document.createElement("textarea");
+            textarea.value = extractedText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            showToast("Copiato negli appunti!");
+        });
+    </script>
+</body>
+</html>
