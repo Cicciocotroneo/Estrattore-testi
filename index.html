@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -366,7 +365,6 @@
             font-size: 11px;
         }
 
-        /* Rendering tipografico nell'anteprima */
         .preview-rendered h1 { font-size: 16px; font-weight: 800; margin: 14px 0 6px 0; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
         .preview-rendered h2 { font-size: 14px; font-weight: 700; margin: 12px 0 4px 0; }
         .preview-rendered h3 { font-size: 13px; font-weight: 700; margin: 8px 0 3px 0; color: var(--text-muted); }
@@ -483,7 +481,7 @@
                 </div>
                 <div>
                     <h1>Universal Book Cleaner AI</h1>
-                    <p class="subtitle">Ottimizzazione Costi, Corsivo & Tipografia</p>
+                    <p class="subtitle">Codifica UTF-8 BOM, Corsivo & Tipografia</p>
                 </div>
             </div>
             <button id="themeToggle" class="theme-btn" title="Cambia tema">
@@ -633,7 +631,6 @@
                 </div>
             </div>
 
-            <!-- OPZIONE: Riconoscimento Corsivo Hardware/Font -->
             <div class="option-group" style="background: rgba(99, 102, 241, 0.05); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.15);">
                 <div class="option-text">
                     <p style="color: var(--primary);">Estrazione Corsivo dai Font PDF</p>
@@ -783,9 +780,6 @@
         let startTime = 0;
         let totalAiCalls = 0;
 
-        /**
-         * REGOLE DETERMINISTICHE UNIVERSALI (Eseguite in locale a 0 Token)
-         */
         let universalOcrRules = [
             { pattern: /([ldcnsmtq]|all|dell|nell|coll|sull|dall|un|quest|poc|qualc|quell|mezz|d'altr)\?([a-zàèéìòùáéíóúA-Z])/gi, replacement: "$1'$2", desc: "Apostrofo corrotto da '?'" },
             { pattern: /\b([Cc])\?è\b/g, replacement: "$1'è", desc: "C?è -> C'è" },
@@ -1047,9 +1041,6 @@
             }).join('');
         }
 
-        /**
-         * PROMPT DI REVISIONE TIPOGRAFICA CON POTENZIAMENTO CORSIVO & RIDUZIONE OVERHEAD
-         */
         async function cleanBatchWithGemini(batchText, key, model) {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
             
@@ -1111,12 +1102,9 @@ REGOLE RIGIDE:
             }
         }
 
-        // Funzione Smart Filter: rileva se una pagina necessita veramente dell'AI o se è già pulita
         function needsAiCleaning(text) {
             if (text.length < 40) return false;
-            // Se contiene caratteri anomali o pattern tipici di scansione corrotta
             if (/[?~=\|\{\}\\\/_\^]/.test(text)) return true;
-            // Se contiene probabili parole sillabate residue
             if (/\b\w+-\s+\w+\b/.test(text)) return true;
             return false;
         }
@@ -1174,7 +1162,6 @@ REGOLE RIGIDE:
 
                         let rawPages = [];
 
-                        // FASE 1: Estrazione con intercettazione avanzata del corsivo dai font PDF
                         for (let pageNum = startP; pageNum <= endP; pageNum++) {
                             if (!isProcessing) return;
 
@@ -1194,13 +1181,11 @@ REGOLE RIGIDE:
 
                                 let tokenText = item.str;
                                 
-                                // Riconoscimento hardware/vettoriale del corsivo nei font del PDF
                                 if (detectFontItalics && tokenText.trim().length > 0) {
                                     const fontNameLower = (item.fontName || "").toLowerCase();
                                     const isItalicFont = fontNameLower.includes("italic") || 
                                                          fontNameLower.includes("oblique") || 
                                                          fontNameLower.includes("slant");
-                                    // transform[2] rappresenta il fattore di inclinazione (shear)
                                     const isSkewed = item.transform && Math.abs(item.transform[2]) > 0.15;
 
                                     if ((isItalicFont || isSkewed) && !tokenText.startsWith('*')) {
@@ -1223,15 +1208,12 @@ REGOLE RIGIDE:
 
                             let pageString = cleaned.join('\n');
 
-                            // Pulizia corsivo adiacente duplicato (es. *parola* *altra* -> *parola altra*)
                             pageString = pageString.replace(/\*\s+\*/g, ' ');
 
-                            // De-sillabazione euristica locale
                             if (dehyphenCheck.checked) {
                                 pageString = advancedUniversalDehyphenate(pageString);
                             }
 
-                            // Correzione deterministica refusi OCR (0 Token)
                             if (dictCorrectionCheck.checked) {
                                 pageString = applyUniversalOcrCorrections(pageString);
                             }
@@ -1245,22 +1227,18 @@ REGOLE RIGIDE:
                             pageCounter.textContent = `${currentIndex} di ${pagesToProcess}`;
                         }
 
-                        // FASE 2: Ricongiungimento a cavallo di pagina (Cross-Page Stitching)
                         if (dehyphenCheck.checked && rawPages.length > 1) {
                             rawPages = stitchCrossPageHyphens(rawPages);
                         }
 
-                        // FASE 3: Elaborazione Batch Salva-Costi con AI (oppure 100% Offline)
                         let processedTextBlocks = [];
                         
                         if (!aiCorrectToggle.checked) {
-                            // Modalità 100% GRATUITA OFFLINE (Zero Chiamate AI)
                             progressStatus.textContent = "Elaborazione offline completata a costo 0 €...";
                             processedTextBlocks = rawPages;
                             progressBar.style.width = "100%";
                             progressPercent.textContent = "100%";
                         } else {
-                            // Modalità AI con Batching intelligente
                             let batchIndex = 0;
                             while (batchIndex < rawPages.length) {
                                 if (!isProcessing) return;
@@ -1272,7 +1250,6 @@ REGOLE RIGIDE:
 
                                 let resultBlock = combinedText;
 
-                                // Smart Filter: salta la chiamata AI se il blocco è già pulito
                                 const shouldCallAi = !smartFilterActive || needsAiCleaning(combinedText);
 
                                 if (shouldCallAi && combinedText.trim().length > 30) {
@@ -1289,7 +1266,6 @@ REGOLE RIGIDE:
                                         await new Promise(r => setTimeout(r, delayTime));
                                     }
                                 } else {
-                                    // Risparmiata chiamata API grazie allo Smart Filter
                                     console.log(`Pagine ${batchPageStart}-${batchPageEnd} pulite localmente (0 token).`);
                                 }
 
@@ -1308,7 +1284,6 @@ REGOLE RIGIDE:
                             if (dehyphenCheck.checked) {
                                 extractedText = advancedUniversalDehyphenate(extractedText);
                             }
-                            // Pulizia corsivi rotti
                             extractedText = extractedText.replace(/\*\s+\*/g, ' ');
                             extractedText = extractedText.replace(/\n{3,}/g, '\n\n');
                             showFinalResults();
@@ -1351,9 +1326,13 @@ REGOLE RIGIDE:
             showToast(`Completato con successo! Chiamate AI effettuate: ${totalAiCalls}`);
         }
 
+        // FUNZIONE DI DOWNLOAD CON BOM UTF-8 (\uFEFF) E NORMALIZZAZIONE NFC
         function downloadFile(content, extension, mimeType) {
             if (!content) return;
-            const blob = new Blob([content], { type: mimeType });
+            // Normalizzazione Unicode in forma canonica composta (NFC)
+            const normalized = content.normalize('NFC');
+            // Aggiunta del BOM UTF-8 (\uFEFF) per forzare tutti i lettori TXT/e-reader a leggere in UTF-8
+            const blob = new Blob(['\uFEFF' + normalized], { type: `${mimeType};charset=utf-8` });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             const cleanName = selectedFile.name.substring(0, selectedFile.name.lastIndexOf('.')) || 'Trascrizione';
@@ -1364,21 +1343,23 @@ REGOLE RIGIDE:
         }
 
         downloadMdBtn.addEventListener('click', () => {
-            downloadFile(extractedText, 'md', 'text/markdown;charset=utf-8');
+            downloadFile(extractedText, 'md', 'text/markdown');
         });
 
         downloadTxtBtn.addEventListener('click', () => {
+            // Conversione pulita da Markdown a testo puro mantenendo gli accenti intatti
             const plainText = extractedText
+                .normalize('NFC')
                 .replace(/^#+\s+/gm, '')
                 .replace(/^>\s+/gm, '    ')
-                .replace(/\*(.*?)\*/g, '$1');
-            downloadFile(plainText, 'txt', 'text/plain;charset=utf-8');
+                .replace(/\*([^*\n]+)\*/g, '$1');
+            downloadFile(plainText, 'txt', 'text/plain');
         });
 
         copyBtn.addEventListener('click', () => {
             if (!extractedText) return;
             const t = document.createElement("textarea");
-            t.value = extractedText;
+            t.value = extractedText.normalize('NFC');
             document.body.appendChild(t);
             t.select();
             document.execCommand("copy");
