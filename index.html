@@ -450,7 +450,7 @@
                 </div>
                 <div>
                     <h1>Universal Book Cleaner AI</h1>
-                    <p class="subtitle">Zero-Thinking Budget • Super Risparmio Token</p>
+                    <p class="subtitle">Gemini 3.5 Flash-Lite • Super Risparmio Token</p>
                 </div>
             </div>
             <button id="themeToggle" class="theme-btn" title="Cambia tema">
@@ -476,7 +476,7 @@
                 <div>
                     <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">MODELLO GEMINI</label>
                     <select id="modelSelector">
-                        <option value="gemini-2.5-flash-lite" selected>Gemini 2.5 Flash-Lite (Super economico)</option>
+                        <option value="gemini-3.5-flash-lite" selected>Gemini 3.5 Flash-Lite (Super economico)</option>
                         <option value="gemini-2.5-flash">Gemini 2.5 Flash (Standard)</option>
                     </select>
                 </div>
@@ -509,7 +509,7 @@
             </div>
 
             <div class="cost-box">
-                🛡️ <b>Ottimizzazione Costi Attiva:</b> il budget di ragionamento (Thinking) è impostato a <b>0 token</b>. Questo previene la generazione di 2.000–4.000 token invisibili per chiamata, riducendo la spesa del <b>90%</b> (da ~2,00 € a meno di 0,05 € con Flash-Lite per oltre 200 pagine).
+                🛡️ <b>Ottimizzazione Costi Attiva:</b> impostato con <b>Gemini 3.5 Flash-Lite</b> e livello di pensiero minimo (senza token nascosti). Il costo per oltre 200 pagine scende a meno di <b>0,05 €</b> complessivi.
             </div>
 
             <button id="testApiBtn" style="width:100%; margin-top:10px; padding:9px; background:transparent; border:1px solid var(--border-color); color:var(--text-main); border-radius:10px; font-weight:600; font-size:11px; cursor:pointer;">
@@ -778,6 +778,22 @@
             }
         });
 
+        // Configurazione per disattivare il thinking budget a seconda del modello
+        function getGenerationConfig(model) {
+            if (model.includes('3.5')) {
+                return {
+                    thinkingConfig: {
+                        thinkingLevel: "MINIMAL"
+                    }
+                };
+            }
+            return {
+                thinkingConfig: {
+                    thinkingBudget: 0
+                }
+            };
+        }
+
         testApiBtn.addEventListener('click', async () => {
             const activeKey = apiKeyInput.value.trim();
             if (!activeKey) {
@@ -792,14 +808,9 @@
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${chosenModel}:generateContent?key=${activeKey}`;
             
-            // CONFIGURAZIONE SALVA-COSTI: thinkingBudget = 0
             const payload = { 
                 contents: [{ parts: [{ text: "Rispondi esclusivamente con 'OK'." }] }],
-                generationConfig: {
-                    thinkingConfig: {
-                        thinkingBudget: 0
-                    }
-                }
+                generationConfig: getGenerationConfig(chosenModel)
             };
 
             try {
@@ -811,7 +822,7 @@
                 const resJson = await response.json();
 
                 if (response.ok) {
-                    showDiagnostic(`Connessione verificata con successo! Modello pronto (Thinking disattivato a costo minimo): ${chosenModel}`, "success");
+                    showDiagnostic(`Connessione verificata con successo! Modello attivo: ${chosenModel} (Zero Thinking overhead)`, "success");
                 } else {
                     const errDetails = resJson.error?.message || `Errore HTTP ${response.status}`;
                     const errCode = resJson.error?.status || "ERRORE";
@@ -943,15 +954,10 @@ REGOLE RIGIDE:
 4. RESTITUZIONE PURA:
    - Restituisci SOLO il testo pulito in Markdown, senza preamboli, note o saluti.`;
 
-            // ZERO-THINKING BUDGET: elimina l'overhead di token invisibili
             const payload = {
                 contents: [{ parts: [{ text: batchText }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
-                generationConfig: {
-                    thinkingConfig: {
-                        thinkingBudget: 0
-                    }
-                }
+                generationConfig: getGenerationConfig(model)
             };
 
             let retryDelay = 1500;
