@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Book Cleaner - Diagnostico</title>
+    <title>AI Book Cleaner Pro - E-Reader</title>
     
-    <!-- PDF.js per l'estrazione locale del testo -->
+    <!-- PDF.js per lettura PDF in locale -->
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 
     <style>
@@ -49,12 +49,12 @@
             color: var(--text-main); 
             min-height: 100vh; 
             padding: 16px; 
-            padding-bottom: 110px; 
+            padding-bottom: 120px; 
             transition: background-color 0.2s, color 0.2s; 
         }
 
         .container { 
-            max-w: 450px; 
+            max-width: 480px; 
             margin: 0 auto; 
             width: 100%;
         }
@@ -63,7 +63,7 @@
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            margin-bottom: 24px; 
+            margin-bottom: 20px; 
         }
 
         .logo-section {
@@ -105,15 +105,11 @@
             padding: 24px; 
             text-align: center; 
             cursor: pointer; 
-            margin-bottom: 20px; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02); 
+            margin-bottom: 16px; 
             transition: border-color 0.2s;
         }
         
-        .drop-zone:hover {
-            border-color: var(--primary);
-        }
-
+        .drop-zone:hover { border-color: var(--primary); }
         .drop-zone p { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
         .drop-zone span { font-size: 11px; color: var(--text-muted); display: block; }
         
@@ -121,8 +117,8 @@
             background: var(--bg-card); 
             border: 1px solid var(--border-color); 
             border-radius: 14px; 
-            padding: 14px; 
-            margin-bottom: 20px; 
+            padding: 12px 14px; 
+            margin-bottom: 16px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -151,7 +147,7 @@
             color: var(--danger); 
             font-weight: bold; 
             cursor: pointer; 
-            padding: 6px 12px; 
+            padding: 6px 10px; 
             font-size: 12px;
         }
 
@@ -160,13 +156,13 @@
             border: 1px solid var(--border-color); 
             border-radius: 16px; 
             padding: 16px; 
-            margin-bottom: 20px; 
+            margin-bottom: 16px; 
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
         .panel-title { 
-            font-size: 13px; 
-            margin-bottom: 14px; 
+            font-size: 12px; 
+            margin-bottom: 12px; 
             font-weight: 700; 
             display: flex;
             align-items: center;
@@ -180,44 +176,38 @@
             display: flex; 
             justify-content: space-between; 
             align-items: flex-start; 
-            margin-bottom: 14px; 
+            margin-bottom: 12px; 
         }
         
         .option-text p { font-size: 13px; font-weight: 600; }
         .option-text span { font-size: 10px; color: var(--text-muted); display: block; margin-top: 2px; }
         
         input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             accent-color: var(--primary);
             cursor: pointer;
         }
 
-        textarea { 
-            width: 100%; 
-            border: 1px solid var(--border-color); 
-            background: var(--bg-main); 
-            color: var(--text-main); 
-            border-radius: 10px; 
-            padding: 10px; 
-            font-size: 12px; 
-            resize: none; 
-            margin-top: 6px; 
+        input[type="text"], input[type="password"], input[type="number"], select {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-main);
+            color: var(--text-main);
+            border-radius: 10px;
+            padding: 9px 12px;
+            font-size: 12px;
             outline: none;
         }
 
-        textarea:focus {
+        input:focus, select:focus {
             border-color: var(--primary);
         }
 
-        .api-badge {
-            background-color: var(--accent-bg);
-            color: var(--accent-text);
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 14px;
-            font-size: 11px;
-            line-height: 1.4;
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
         .diagnostic-box {
@@ -227,26 +217,18 @@
             font-size: 11px;
             display: none;
             word-break: break-all;
+            line-height: 1.4;
         }
         
-        .diagnostic-success {
-            background-color: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-        
-        .diagnostic-error {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
+        .diagnostic-success { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .diagnostic-error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 
         .progress-container { 
             background: var(--bg-card); 
             border: 1px solid var(--border-color); 
             border-radius: 16px; 
             padding: 16px; 
-            margin-bottom: 20px; 
+            margin-bottom: 16px; 
         }
 
         .progress-header {
@@ -268,7 +250,7 @@
             background: linear-gradient(90deg, #6366f1, #4f46e5); 
             height: 100%; 
             width: 0%; 
-            transition: width 0.15s; 
+            transition: width 0.2s; 
         }
 
         .results { 
@@ -276,15 +258,7 @@
             border: 1px solid var(--border-color); 
             border-radius: 16px; 
             padding: 16px; 
-            margin-bottom: 20px; 
-        }
-
-        .results-header {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            font-size: 13px;
-            font-weight: 700;
+            margin-bottom: 16px; 
         }
 
         .preview-area { 
@@ -292,9 +266,9 @@
             border: 1px solid var(--border-color); 
             border-radius: 10px; 
             padding: 12px; 
-            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace; 
+            font-family: SFMono-Regular, Consolas, monospace; 
             font-size: 11px; 
-            height: 180px; 
+            height: 160px; 
             overflow-y: auto; 
             white-space: pre-wrap; 
             margin-top: 10px; 
@@ -306,8 +280,8 @@
             bottom: 0; 
             left: 0; 
             right: 0; 
-            padding: 16px; 
-            background: rgba(255,255,255,0.9); 
+            padding: 14px; 
+            background: rgba(255,255,255,0.92); 
             backdrop-filter: blur(10px); 
             border-top: 1px solid var(--border-color); 
             display: flex; 
@@ -316,14 +290,14 @@
         }
 
         .dark-theme .footer-controls { 
-            background: rgba(11, 15, 25, 0.9); 
+            background: rgba(11, 15, 25, 0.92); 
         }
 
         .btn-group { 
-            max-width: 450px; 
+            max-width: 480px; 
             width: 100%; 
             display: flex; 
-            gap: 10px; 
+            gap: 8px; 
         }
         
         button.main-btn { 
@@ -343,23 +317,12 @@
             gap: 8px;
         }
 
-        .dark-theme button.main-btn {
-            background: #334155;
-            color: #94a3b8;
-        }
-
-        button.main-btn.active { 
-            background: var(--primary); 
-            color: white; 
-        }
-
-        button.main-btn.processing { 
-            background: var(--danger); 
-            color: white; 
-        }
+        .dark-theme button.main-btn { background: #334155; color: #94a3b8; }
+        button.main-btn.active { background: var(--primary); color: white; }
+        button.main-btn.processing { background: var(--danger); color: white; }
         
-        button.action-icon-btn { 
-            width: 48px; 
+        button.action-btn { 
+            padding: 0 14px;
             height: 48px; 
             border: 1px solid var(--border-color); 
             border-radius: 12px; 
@@ -368,12 +331,10 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
+            gap: 6px;
+            font-weight: 600;
+            font-size: 12px;
             cursor: pointer; 
-            transition: transform(0.1s);
-        }
-
-        button.action-icon-btn:active {
-            transform: scale(0.95);
         }
 
         .hidden { display: none !important; }
@@ -397,21 +358,10 @@
             text-align: center; 
             width: 85%; 
             max-width: 320px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
-        #toast.show {
-            opacity: 1;
-            transform: translate(-50%, -5px);
-        }
+        #toast.show { opacity: 1; transform: translate(-50%, -5px); }
 
-        svg {
-            display: inline-block;
-            vertical-align: middle;
-            flex-shrink: 0;
-        }
+        svg { display: inline-block; vertical-align: middle; flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -423,8 +373,8 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
                 </div>
                 <div>
-                    <h1>AI Book Cleaner</h1>
-                    <p class="subtitle">E-Reader & Diagnostica API</p>
+                    <h1>AI Book Cleaner Pro</h1>
+                    <p class="subtitle">Trascrizione & Ottimizzazione E-Reader</p>
                 </div>
             </div>
             <button id="themeToggle" class="theme-btn" title="Cambia tema">
@@ -432,36 +382,49 @@
             </button>
         </header>
 
-        <!-- Configurazione API con Diagnostica Integrata -->
+        <!-- Configurazione API & Modello -->
         <div class="panel">
             <div class="panel-title">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                Configurazione Chiave API
-            </div>
-            
-            <div class="api-badge">
-                Inserisci la chiave API creata su <a href="https://aistudio.google.com/" target="_blank" style="color:var(--accent-text); font-weight:bold; text-decoration:underline;">Google AI Studio</a>. L'applicazione utilizzerà il modello <b>gemini-2.5-flash</b>.
+                Motore AI & Parametri
             </div>
 
             <div style="display:flex; gap:8px; margin-bottom:10px;">
-                <input type="password" id="apiKeyInput" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-main); font-size:12px; outline:none;" placeholder="Incolla API Key (AIzaSy...)">
-                <button id="saveKeyBtn" style="padding:10px 14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; font-size:12px; cursor:pointer;">Salva</button>
+                <input type="password" id="apiKeyInput" placeholder="Incolla API Key Google AI Studio">
+                <button id="saveKeyBtn" style="padding:9px 14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; font-size:12px; cursor:pointer;">Salva</button>
             </div>
 
-            <button id="testApiBtn" style="width:100%; padding:10px; background:transparent; border:1px solid var(--border-color); color:var(--text-main); border-radius:10px; font-weight:600; font-size:12px; cursor:pointer; transition: background-color 0.1s;">
-                🧪 Testa Connessione API
-            </button>
+            <div class="grid-2" style="margin-bottom:10px;">
+                <div>
+                    <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">MODELLO GEMINI</label>
+                    <select id="modelSelector">
+                        <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (Consigliato)</option>
+                        <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite (Super economico)</option>
+                        <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">PAUSA FREE TIER</label>
+                    <select id="delaySelector">
+                        <option value="4000" selected>4 sec (Anti Rate-Limit Free)</option>
+                        <option value="1500">1.5 sec (Piano a consumo)</option>
+                        <option value="0">Nessuna (Batch Pay)</option>
+                    </select>
+                </div>
+            </div>
 
-            <!-- Box di diagnostica per gli errori -->
+            <button id="testApiBtn" style="width:100%; padding:9px; background:transparent; border:1px solid var(--border-color); color:var(--text-main); border-radius:10px; font-weight:600; font-size:11px; cursor:pointer;">
+                🧪 Verifica API & Connessione
+            </button>
             <div id="diagnosticOutput" class="diagnostic-box"></div>
         </div>
 
         <!-- Caricamento File -->
         <div id="dropZone" class="drop-zone">
             <input type="file" id="pdfFileInput" accept="application/pdf" style="display:none">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
             <p>Seleziona il PDF del libro</p>
-            <span>Il file viene letto localmente nel telefono</span>
+            <span>Elaborazione locale sicura sul tuo dispositivo</span>
         </div>
 
         <!-- Info File -->
@@ -476,33 +439,36 @@
             <button id="removeFileBtn">Rimuovi</button>
         </div>
 
-        <!-- Opzioni -->
+        <!-- Opzioni & Range Pagine -->
         <div class="panel">
             <div class="panel-title">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="21" y2="21"/><line x1="4" x2="20" y1="14" y2="14"/><line x1="4" x2="20" y1="7" y2="7"/></svg>
-                Opzioni di Ottimizzazione
+                Intervallo & Pulizia
+            </div>
+
+            <div class="grid-2" style="margin-bottom:12px;">
+                <div>
+                    <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">DA PAGINA</label>
+                    <input type="number" id="startPageInput" value="1" min="1">
+                </div>
+                <div>
+                    <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">A PAGINA</label>
+                    <input type="number" id="endPageInput" placeholder="Tutte">
+                </div>
             </div>
             
             <div class="option-group">
                 <div class="option-text">
                     <p>Correzione Intelligente AI</p>
-                    <span>Riassegna accenti ed elimina refusi OCR con Gemini</span>
+                    <span>Riconnette parole e ripulisce refusi di scansione</span>
                 </div>
                 <input type="checkbox" id="aiCorrectToggle" checked>
             </div>
 
-            <div class="option-group">
-                <div class="option-text">
-                    <p>Sillabazione e Trattini</p>
-                    <span>Riconnette le parole spezzate (es. "sanita-\nria")</span>
-                </div>
-                <input type="checkbox" id="fixHyphens" checked>
-            </div>
-
             <div class="option-group" style="margin-bottom:0;">
                 <div class="option-text">
-                    <p>Ignora numeri di pagina</p>
-                    <span>Rileva e rimuove le cifre isolate di fine riga</span>
+                    <p>Ignora numeri di pagina isolati</p>
+                    <span>Rimuove cifre a piè di pagina</span>
                 </div>
                 <input type="checkbox" id="removePageNumbers" checked>
             </div>
@@ -511,37 +477,39 @@
         <!-- Barra di Avanzamento -->
         <div id="progressContainer" class="progress-container hidden">
             <div class="progress-header">
-                <span id="progressStatus" style="color:var(--primary)">Analisi PDF...</span>
+                <span id="progressStatus" style="color:var(--primary)">Preparazione...</span>
                 <span id="progressPercent">0%</span>
             </div>
             <div class="progress-bar-bg">
                 <div id="progressBar" class="progress-bar"></div>
             </div>
-            <p id="pageCounter" style="font-size:10px; color:var(--text-muted); text-align:right; margin-top:6px;">Pagina 0 di 0</p>
+            <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:var(--text-muted);">
+                <span id="timerEstimate">Tempo trascorso: 0s</span>
+                <span id="pageCounter">Pagina 0 di 0</span>
+            </div>
         </div>
 
         <!-- Risultato -->
         <div id="resultsCard" class="results hidden">
             <div class="results-header">
-                <span>Testo Elaborato</span>
-                <span id="wordCount" style="color:var(--success); font-size:11px;">0 parole</span>
+                <span>Trascrizione Pronta</span>
+                <span id="wordCount" style="color:var(--success); font-size:11px; font-weight:bold;">0 parole</span>
             </div>
             <div id="textPreview" class="preview-area"></div>
         </div>
     </div>
 
-    <!-- Controlli statici nel footer -->
+    <!-- Controlli footer -->
     <div class="footer-controls">
         <div class="btn-group">
             <button id="mainActionBtn" class="main-btn" disabled>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
                 <span>Carica un PDF</span>
             </button>
-            <button id="downloadBtn" class="action-icon-btn hidden" style="background:var(--success); color:white; border:none;" title="Scarica file TXT">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            <button id="downloadTxtBtn" class="action-btn hidden" style="background:var(--success); color:white; border:none;" title="Scarica file TXT">
+                TXT
             </button>
-            <button id="copyBtn" class="action-icon-btn hidden" title="Copia testo negli appunti">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            <button id="copyBtn" class="action-btn hidden" title="Copia negli appunti">
+                Copia
             </button>
         </div>
     </div>
@@ -549,16 +517,11 @@
     <div id="toast">Notifica</div>
 
     <script>
-        // Disabilitazione totale dei Web Worker per compatibilità file:// locale
         const pdfjsLib = window['pdfjs-dist/build/pdf'];
         if (pdfjsLib) {
             pdfjsLib.GlobalWorkerOptions.workerSrc = '';
         }
 
-        // Chiave di sistema pre-configurata dall'ambiente (se presente)
-        const systemApiKey = "";
-
-        // Elementi HTML
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const dropZone = document.getElementById('dropZone');
@@ -568,13 +531,14 @@
         const fileSizeEl = document.getElementById('fileSize');
         const removeFileBtn = document.getElementById('removeFileBtn');
         const mainActionBtn = document.getElementById('mainActionBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
+        const downloadTxtBtn = document.getElementById('downloadTxtBtn');
         const copyBtn = document.getElementById('copyBtn');
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         const progressPercent = document.getElementById('progressPercent');
         const progressStatus = document.getElementById('progressStatus');
         const pageCounter = document.getElementById('pageCounter');
+        const timerEstimate = document.getElementById('timerEstimate');
         const resultsCard = document.getElementById('resultsCard');
         const textPreview = document.getElementById('textPreview');
         const wordCountEl = document.getElementById('wordCount');
@@ -584,54 +548,55 @@
         const saveKeyBtn = document.getElementById('saveKeyBtn');
         const testApiBtn = document.getElementById('testApiBtn');
         const diagnosticOutput = document.getElementById('diagnosticOutput');
+        const modelSelector = document.getElementById('modelSelector');
+        const delaySelector = document.getElementById('delaySelector');
+        const startPageInput = document.getElementById('startPageInput');
+        const endPageInput = document.getElementById('endPageInput');
 
         const aiCorrectToggle = document.getElementById('aiCorrectToggle');
-        const fixHyphensCheck = document.getElementById('fixHyphens');
         const removePageNumbersCheck = document.getElementById('removePageNumbers');
 
         let selectedFile = null;
         let extractedText = "";
         let isProcessing = false;
+        let timerInterval = null;
+        let startTime = 0;
 
-        // Gestione Toast
         function showToast(msg) {
             toast.textContent = msg;
             toast.classList.add('show');
             setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
-        // Recupero chiave utente salvata
         const savedKey = localStorage.getItem('local_gemini_api_key');
-        if (savedKey) {
-            apiKeyInput.value = savedKey;
-        }
+        if (savedKey) apiKeyInput.value = savedKey;
 
         saveKeyBtn.addEventListener('click', () => {
             const keyVal = apiKeyInput.value.trim();
             if (keyVal) {
                 localStorage.setItem('local_gemini_api_key', keyVal);
-                showToast("Chiave salvata sul telefono!");
+                showToast("Chiave salvata!");
             } else {
                 localStorage.removeItem('local_gemini_api_key');
                 showToast("Chiave rimossa");
             }
         });
 
-        // Esecuzione Diagnostica della Chiave API
         testApiBtn.addEventListener('click', async () => {
-            const activeKey = apiKeyInput.value.trim() || systemApiKey;
+            const activeKey = apiKeyInput.value.trim();
             if (!activeKey) {
-                showDiagnostic("Inserisci prima una chiave API valida.", "error");
+                showDiagnostic("Inserisci prima la tua chiave API.", "error");
                 return;
             }
 
+            const chosenModel = modelSelector.value;
             testApiBtn.disabled = true;
-            testApiBtn.textContent = "⏳ Connessione in corso...";
-            showDiagnostic("Invio di un pacchetto di test a Google...", "success");
+            testApiBtn.textContent = "⏳ Verifica in corso...";
+            showDiagnostic(`Connessione a ${chosenModel}...`, "success");
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${chosenModel}:generateContent?key=${activeKey}`;
             const payload = {
-                contents: [{ parts: [{ text: "Rispondi solo con la parola 'OK' se leggi questo messaggio." }] }]
+                contents: [{ parts: [{ text: "Rispondi esclusivamente con 'OK'." }] }]
             };
 
             try {
@@ -640,22 +605,20 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
                 const resJson = await response.json();
 
                 if (response.ok) {
-                    const reply = resJson.candidates?.[0]?.content?.parts?.[0]?.text;
-                    showDiagnostic(`Connessione riuscita! Il modello ha risposto: "${reply?.trim()}"`, "success");
+                    showDiagnostic(`Connessione verificata con successo! Modello: ${chosenModel}`, "success");
                 } else {
                     const errDetails = resJson.error?.message || `Errore HTTP ${response.status}`;
-                    const errCode = resJson.error?.status || "UNKNOWN";
-                    showDiagnostic(`Errore di Google API [${errCode}]: ${errDetails}`, "error");
+                    const errCode = resJson.error?.status || "ERRORE";
+                    showDiagnostic(`Errore [${errCode}]: ${errDetails}`, "error");
                 }
             } catch (err) {
-                showDiagnostic(`Impossibile raggiungere i server di Google. Verifica la tua connessione internet o le restrizioni locali del tuo browser. Dettaglio: ${err.message}`, "error");
+                showDiagnostic(`Errore di rete: ${err.message}`, "error");
             } finally {
                 testApiBtn.disabled = false;
-                testApiBtn.textContent = "🧪 Testa Connessione API";
+                testApiBtn.textContent = "🧪 Verifica API & Connessione";
             }
         });
 
@@ -665,26 +628,12 @@
             diagnosticOutput.className = `diagnostic-box ${type === 'success' ? 'diagnostic-success' : 'diagnostic-error'}`;
         }
 
-        // Toggle del Tema Scuro/Chiaro
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.body.classList.add('dark-theme');
-            themeIcon.innerHTML = '<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>';
-        }
-
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-theme');
-            if (document.body.classList.contains('dark-theme')) {
-                localStorage.setItem('theme', 'dark');
-                themeIcon.innerHTML = '<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>';
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeIcon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
-            }
         });
 
-        // Interazioni File
         dropZone.addEventListener('click', () => pdfFileInput.click());
-        pdfFileInput.addEventListener('change', () => {
+        pdfFileInput.addEventListener('change', async () => {
             const file = pdfFileInput.files[0];
             if (!file) return;
 
@@ -695,48 +644,49 @@
             fileMeta.classList.remove('hidden');
             dropZone.classList.add('hidden');
 
+            try {
+                const arrayBuffer = await file.slice(0, 500000).arrayBuffer();
+                const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer), disableWorker: true });
+                const doc = await loadingTask.promise;
+                endPageInput.placeholder = `Max ${doc.numPages}`;
+                endPageInput.value = doc.numPages;
+            } catch (e) {}
+
             mainActionBtn.removeAttribute('disabled');
             mainActionBtn.className = "main-btn active";
-            mainActionBtn.querySelector('span').textContent = "Avvia Elaborazione";
+            mainActionBtn.querySelector('span').textContent = "Avvia Trascrizione";
         });
 
-        removeFileBtn.addEventListener('click', () => {
-            resetApp();
-        });
+        removeFileBtn.addEventListener('click', resetApp);
 
         function resetApp() {
             selectedFile = null;
             extractedText = "";
             isProcessing = false;
+            clearInterval(timerInterval);
             pdfFileInput.value = "";
-
             fileMeta.classList.add('hidden');
             dropZone.classList.remove('hidden');
             progressContainer.classList.add('hidden');
             resultsCard.classList.add('hidden');
-            downloadBtn.classList.add('hidden');
+            downloadTxtBtn.classList.add('hidden');
             copyBtn.classList.add('hidden');
-
             mainActionBtn.setAttribute('disabled', 'true');
             mainActionBtn.className = "main-btn";
             mainActionBtn.querySelector('span').textContent = "Carica un PDF";
         }
 
-        // Chiamata all'API di Google Gemini (Usa gemini-2.5-flash)
-        async function correctPageWithGemini(text, key) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-            
-            const systemPrompt = "Sei un correttore di bozze. Correggi il testo fornito, che proviene da una scansione OCR imperfetta di un libro d'epoca italiano ('La guerra e le arti sanitarie'). " +
-                                 "Risolvi i caratteri corrotti (es. l?uomo -> l'uomo, perch? -> perché) ed elimina i frammenti spuri dovuti al rumore della scansione. " +
-                                 "MANTENI fedelmente la sintassi e il lessico del 1931: non aggiornare o modernizzare la prosa, limitati a correggere i soli difetti di trascrizione. Restituisci esclusivamente il testo corretto, senza note.";
+        async function cleanPageWithGemini(text, key, model) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+            const systemPrompt = "Sei un correttore di bozze. Ripara il testo proveniente da scansione OCR ('La guerra e le arti sanitarie'). Risolvi caratteri corrotti ed elimina refusi di scansione. MANTIENI fedelmente la sintassi originale del 1931 senza modernizzarla. Restituisci esclusivamente il testo corretto senza note.";
 
             const payload = {
                 contents: [{ parts: [{ text: text }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] }
             };
 
-            let retryDelay = 1000;
-            for (let i = 0; i < 5; i++) {
+            let retryDelay = 1500;
+            for (let i = 0; i < 4; i++) {
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
@@ -744,25 +694,26 @@
                         body: JSON.stringify(payload)
                     });
 
-                    if (!response.ok) {
-                        const errJson = await response.json().catch(() => ({}));
-                        const errMsg = errJson.error?.message || `HTTP ${response.status}`;
-                        throw new Error(errMsg);
+                    if (response.status === 429) {
+                        await new Promise(r => setTimeout(r, 6000));
+                        continue;
                     }
-                    
+
+                    if (!response.ok) {
+                        const err = await response.json().catch(() => ({}));
+                        throw new Error(err.error?.message || `HTTP ${response.status}`);
+                    }
+
                     const resJson = await response.json();
-                    const clean = resJson.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (clean) return clean.trim();
-                    throw new Error("Risposta vuota dall'API.");
+                    return resJson.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || text;
                 } catch (e) {
-                    if (i === 4) throw e;
+                    if (i === 3) throw e;
                     await new Promise(r => setTimeout(r, retryDelay));
                     retryDelay *= 2;
                 }
             }
         }
 
-        // Loop principale di esecuzione
         mainActionBtn.addEventListener('click', async () => {
             if (!selectedFile) return;
             if (isProcessing) {
@@ -771,184 +722,156 @@
                 return;
             }
 
-            if (typeof pdfjsLib === 'undefined') {
-                alert("La libreria PDF.js non è stata caricata. Assicurati che il telefono sia connesso a Internet al primo avvio.");
-                return;
-            }
-
-            const activeKey = apiKeyInput.value.trim() || systemApiKey;
-
+            const activeKey = apiKeyInput.value.trim();
             if (aiCorrectToggle.checked && !activeKey) {
-                showToast("Errore: Inserisci e salva la tua Chiave API prima di iniziare!");
+                showToast("Inserisci e salva la tua Chiave API!");
                 return;
             }
+
+            const model = modelSelector.value;
+            const delayTime = parseInt(delaySelector.value, 10);
 
             try {
                 isProcessing = true;
                 mainActionBtn.className = "main-btn processing";
                 mainActionBtn.querySelector('span').textContent = "Annulla";
-                
                 progressContainer.classList.remove('hidden');
                 resultsCard.classList.add('hidden');
-                downloadBtn.classList.add('hidden');
+                downloadTxtBtn.classList.add('hidden');
                 copyBtn.classList.add('hidden');
 
-                progressStatus.textContent = "Estrazione del testo dal PDF...";
-                progressBar.style.width = "0%";
-                progressPercent.textContent = "0%";
+                startTime = Date.now();
+                timerInterval = setInterval(() => {
+                    const sec = Math.floor((Date.now() - startTime) / 1000);
+                    timerEstimate.textContent = `Tempo: ${sec}s`;
+                }, 1000);
 
                 const fileReader = new FileReader();
                 fileReader.onload = async function() {
                     try {
-                        const arrayBuffer = new Uint8Array(this.result);
-                        
-                        const loadingTask = pdfjsLib.getDocument({
-                            data: arrayBuffer,
+                        const pdfDoc = await pdfjsLib.getDocument({
+                            data: new Uint8Array(this.result),
                             disableWorker: true,
                             verbosity: 0
-                        });
-                        
-                        const pdfDoc = await loadingTask.promise;
-                        const totalPages = pdfDoc.numPages;
-                        let rawPages = [];
+                        }).promise;
 
-                        // 1. Estrazione del testo locale
-                        for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                        const totalDocPages = pdfDoc.numPages;
+                        const startP = Math.max(1, parseInt(startPageInput.value, 10) || 1);
+                        const endP = Math.min(totalDocPages, parseInt(endPageInput.value, 10) || totalDocPages);
+                        const pagesToProcess = (endP - startP) + 1;
+
+                        let processedPages = [];
+
+                        for (let pageNum = startP; pageNum <= endP; pageNum++) {
                             if (!isProcessing) return;
 
+                            progressStatus.textContent = `Lettura pag. ${pageNum}...`;
                             const page = await pdfDoc.getPage(pageNum);
                             const textContent = await page.getTextContent();
                             
-                            let lastY = null;
                             let lines = [];
                             let currentLine = "";
+                            let lastY = null;
 
                             for (const item of textContent.items) {
                                 if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) {
-                                    lines.push(currentLine);
+                                    lines.push(currentLine.trim());
                                     currentLine = "";
                                 }
                                 currentLine += item.str + " ";
                                 lastY = item.transform[5];
                             }
-                            if (currentLine) lines.push(currentLine);
+                            if (currentLine) lines.push(currentLine.trim());
 
                             let cleaned = [];
                             const numPattern = /^\s*\d+\s*$/;
-
-                            for (let riga of lines) {
-                                let r_strip = riga.trim();
-                                if (!r_strip) continue;
-                                if (removePageNumbersCheck.checked && numPattern.test(r_strip)) continue;
-                                cleaned.push(r_strip);
+                            for (let r of lines) {
+                                if (!r || (removePageNumbersCheck.checked && numPattern.test(r))) continue;
+                                cleaned.push(r);
                             }
 
-                            let pageString = cleaned.join('\n');
-                            if (fixHyphensCheck.checked) {
-                                pageString = pageString.replace(/(\w+)-\s*\n\s*(\w+)/g, '$1$2');
+                            let pageString = cleaned.join('\n').replace(/(\w+)-\s*\n\s*(\w+)/g, '$1$2');
+
+                            if (aiCorrectToggle.checked && pageString.trim().length > 15) {
+                                progressStatus.textContent = `Ottimizzazione AI pag. ${pageNum}...`;
+                                try {
+                                    pageString = await cleanPageWithGemini(pageString, activeKey, model);
+                                } catch (e) {
+                                    console.warn(`Fallback su testo grezzo per pag. ${pageNum}: ${e.message}`);
+                                }
+
+                                if (delayTime > 0) {
+                                    await new Promise(r => setTimeout(r, delayTime));
+                                }
                             }
 
-                            rawPages.push(pageString);
+                            processedPages.push(pageString);
 
-                            const pcent = Math.round((pageNum / totalPages) * 100);
+                            const currentIndex = (pageNum - startP) + 1;
+                            const pcent = Math.round((currentIndex / pagesToProcess) * 100);
                             progressBar.style.width = pcent + "%";
                             progressPercent.textContent = pcent + "%";
-                            pageCounter.textContent = `Lettura: Pagina ${pageNum} di ${totalPages}`;
-                        }
-
-                        // 2. Correzione AI
-                        let finalPages = [];
-                        if (aiCorrectToggle.checked) {
-                            progressStatus.textContent = "Pulizia e correzione con AI...";
-                            progressBar.style.width = "0%";
-                            progressPercent.textContent = "0%";
-
-                            for (let i = 0; i < rawPages.length; i++) {
-                                if (!isProcessing) return;
-                                
-                                pageCounter.textContent = `Correzione: Pagina ${i + 1} di ${totalPages}`;
-                                
-                                let processedText = rawPages[i];
-                                if (processedText.trim().length > 10) {
-                                    try {
-                                        processedText = await correctPageWithGemini(rawPages[i], activeKey);
-                                    } catch (err) {
-                                        console.warn(`Errore AI a pagina ${i + 1}, mantengo testo grezzo`, err);
-                                        showToast(`Nota: Pagina ${i + 1} mantenuta originale per timeout API.`);
-                                    }
-                                }
-                                finalPages.push(processedText);
-
-                                const aiPercent = Math.round(((i + 1) / totalPages) * 100);
-                                progressBar.style.width = aiPercent + "%";
-                                progressPercent.textContent = aiPercent + "%";
-                            }
-                        } else {
-                            finalPages = rawPages;
+                            pageCounter.textContent = `${currentIndex} di ${pagesToProcess}`;
                         }
 
                         if (isProcessing) {
-                            extractedText = finalPages.join('\n\n--- PAGINA ---\n\n');
+                            extractedText = processedPages.join('\n\n--- PAGINA ---\n\n');
                             showFinalResults();
                         }
-
                     } catch (e) {
-                        alert("Impossibile elaborare il PDF internamente: " + e.message);
+                        alert("Errore PDF: " + e.message);
                         resetApp();
                     }
                 };
-                
                 fileReader.readAsArrayBuffer(selectedFile);
-
             } catch (err) {
-                alert("Errore inatteso all'avvio: " + err.message);
+                alert("Errore iniziale: " + err.message);
                 resetApp();
             }
         });
 
         function showFinalResults() {
             isProcessing = false;
+            clearInterval(timerInterval);
             progressContainer.classList.add('hidden');
             resultsCard.classList.remove('hidden');
 
             textPreview.textContent = extractedText.length > 3000
-                ? extractedText.substring(0, 3000) + "\n\n... [Il resto del libro è stato ottimizzato correttamente ed è pronto per essere scaricato] ..."
+                ? extractedText.substring(0, 3000) + "\n\n... [File completato pronto per il salvataggio] ..."
                 : extractedText;
 
             const words = extractedText.split(/\s+/).filter(w => w.length > 0).length;
             wordCountEl.textContent = `${words.toLocaleString()} parole`;
 
-            downloadBtn.classList.remove('hidden');
+            downloadTxtBtn.classList.remove('hidden');
             copyBtn.classList.remove('hidden');
 
             mainActionBtn.removeAttribute('disabled');
             mainActionBtn.className = "main-btn active";
             mainActionBtn.querySelector('span').textContent = "Carica Nuovo";
-            showToast("Libro elaborato correttamente!");
+            showToast("Trascrizione completata!");
         }
 
-        downloadBtn.addEventListener('click', () => {
+        downloadTxtBtn.addEventListener('click', () => {
             if (!extractedText) return;
             const blob = new Blob([extractedText], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             const cleanName = selectedFile.name.substring(0, selectedFile.name.lastIndexOf('.')) || 'Trascrizione';
             a.href = url;
-            a.download = `${cleanName}_Ottimizzato_AI.txt`;
-            document.body.appendChild(a);
+            a.download = `${cleanName}_Ottimizzato.txt`;
             a.click();
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
 
         copyBtn.addEventListener('click', () => {
             if (!extractedText) return;
-            const textarea = document.createElement("textarea");
-            textarea.value = extractedText;
-            document.body.appendChild(textarea);
-            textarea.select();
+            const t = document.createElement("textarea");
+            t.value = extractedText;
+            document.body.appendChild(t);
+            t.select();
             document.execCommand("copy");
-            document.body.removeChild(textarea);
+            document.body.removeChild(t);
             showToast("Copiato negli appunti!");
         });
     </script>
