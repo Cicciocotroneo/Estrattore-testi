@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Book Cleaner Pro - Formattazione & Controllo Refusi</title>
+    <title>Universal Book Cleaner AI - Formattazione Tipografica & De-sillabazione</title>
     
     <!-- PDF.js per lettura PDF in locale -->
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -228,6 +228,19 @@
             border-radius: 6px;
         }
 
+        .context-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--accent-bg);
+            color: var(--accent-text);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
         .dict-table-container {
             max-height: 180px;
             overflow-y: auto;
@@ -339,7 +352,7 @@
             border-radius: 10px; 
             padding: 14px; 
             font-size: 12px; 
-            height: 240px; 
+            height: 250px; 
             overflow-y: auto; 
             line-height: 1.6;
         }
@@ -351,10 +364,10 @@
         }
 
         /* Rendering tipografico nell'anteprima */
-        .preview-rendered h1 { font-size: 16px; font-weight: 800; margin: 12px 0 6px 0; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
-        .preview-rendered h2 { font-size: 14px; font-weight: 700; margin: 10px 0 4px 0; }
+        .preview-rendered h1 { font-size: 16px; font-weight: 800; margin: 14px 0 6px 0; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
+        .preview-rendered h2 { font-size: 14px; font-weight: 700; margin: 12px 0 4px 0; }
         .preview-rendered h3 { font-size: 13px; font-weight: 700; margin: 8px 0 3px 0; color: var(--text-muted); }
-        .preview-rendered p { margin-bottom: 10px; }
+        .preview-rendered p { margin-bottom: 10px; text-align: justify; }
         .preview-rendered blockquote { 
             border-left: 3px solid var(--quote-border); 
             padding: 6px 12px; 
@@ -463,8 +476,8 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
                 </div>
                 <div>
-                    <h1>AI Book Cleaner Pro</h1>
-                    <p class="subtitle">Trascrizione Tipografica & De-sillabazione</p>
+                    <h1>Universal Book Cleaner AI</h1>
+                    <p class="subtitle">Analisi Contestuale & Formattazione per E-Reader</p>
                 </div>
             </div>
             <button id="themeToggle" class="theme-btn" title="Cambia tema">
@@ -497,9 +510,9 @@
                         </select>
                     </div>
                     <div>
-                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">PAUSA FREE TIER</label>
+                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">PAUSA RICHIESTE</label>
                         <select id="delaySelector">
-                            <option value="4000" selected>4 sec (Anti Rate-Limit Free)</option>
+                            <option value="4000" selected>4 sec (Free Tier Anti-Limit)</option>
                             <option value="1500">1.5 sec (Piano a consumo)</option>
                             <option value="0">Nessuna (Batch Pay)</option>
                         </select>
@@ -513,21 +526,21 @@
             </div>
         </div>
 
-        <!-- Dizionario Euristiche & Controllo Termini Noti -->
+        <!-- Regole OCR Universali & Personalizzate -->
         <div class="panel">
             <div class="panel-title" id="toggleDictPanel">
                 <span class="panel-title-text">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
-                    Dizionario Refusi Noti & Storici
+                    Refusi Grafici & Pattern OCR Comuni
                 </span>
-                <span class="badge-count" id="dictCountBadge">18 regole</span>
+                <span class="badge-count" id="dictCountBadge">0 regole</span>
             </div>
 
             <div id="dictPanelBody">
                 <div class="option-group" style="margin-bottom:8px;">
                     <div class="option-text">
-                        <p>Applica Correzione Termini Noti</p>
-                        <span>Sostituzione contestuale di refusi OCR frequenti</span>
+                        <p>Pre-filtro Deterministico</p>
+                        <span>Sostituzione immediata degli artefatti di scansione più diffusi</span>
                     </div>
                     <input type="checkbox" id="dictCorrectionCheck" checked>
                 </div>
@@ -536,19 +549,19 @@
                     <table class="dict-table" id="dictTable">
                         <thead>
                             <tr>
-                                <th>Errore OCR / Pattern</th>
-                                <th>Termine Corretto</th>
+                                <th>Pattern / Artefatto OCR</th>
+                                <th>Correzione Tipografica</th>
                             </tr>
                         </thead>
                         <tbody id="dictTableBody">
-                            <!-- Righe generate da JavaScript -->
+                            <!-- Popolato dinamicamente da JS con regole universali -->
                         </tbody>
                     </table>
                 </div>
 
                 <div style="display:flex; gap:6px; margin-top:8px;">
-                    <input type="text" id="customPatternInput" placeholder="Errore (es. stringomielia)" style="flex:1;">
-                    <input type="text" id="customReplacementInput" placeholder="Correzione (es. siringomielia)" style="flex:1;">
+                    <input type="text" id="customPatternInput" placeholder="Pattern (es. po\? o parola errata)" style="flex:1;">
+                    <input type="text" id="customReplacementInput" placeholder="Sostituzione (es. po')" style="flex:1;">
                     <button id="addRuleBtn" style="padding:0 12px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; font-size:11px; cursor:pointer;">+ Aggiungi</button>
                 </div>
             </div>
@@ -558,8 +571,8 @@
         <div id="dropZone" class="drop-zone">
             <input type="file" id="pdfFileInput" accept="application/pdf" style="display:none">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-            <p>Seleziona il PDF del libro</p>
-            <span>Elaborazione locale protetta nel tuo dispositivo</span>
+            <p>Seleziona qualsiasi PDF da elaborare</p>
+            <span>Riconoscimento autonomo di epoca, lingua e argomento</span>
         </div>
 
         <!-- Info File -->
@@ -567,7 +580,7 @@
             <div class="file-info">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
                 <div>
-                    <span id="fileName" class="file-title">libro.pdf</span>
+                    <span id="fileName" class="file-title">documento.pdf</span>
                     <span id="fileSize" style="color:var(--text-muted); font-size:10px;">0.0 MB</span>
                 </div>
             </div>
@@ -579,7 +592,7 @@
             <div class="panel-title">
                 <span class="panel-title-text">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="21" y2="21"/><line x1="4" x2="20" y1="14" y2="14"/><line x1="4" x2="20" y1="7" y2="7"/></svg>
-                    Intervallo Pagine & De-sillabazione
+                    Intervallo Pagine & Opzioni
                 </span>
             </div>
 
@@ -594,19 +607,19 @@
                 </div>
             </div>
 
-            <!-- OPZIONE CHIAVE: De-sillabazione avanzata -->
+            <!-- OPZIONE: De-sillabazione universale -->
             <div class="option-group" style="background: rgba(99, 102, 241, 0.05); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.15);">
                 <div class="option-text">
-                    <p style="color: var(--primary);">Unisci Parole a Capo (De-sillabazione)</p>
-                    <span>Fonde parole spezzate con trattino a fine riga e fra cambi di pagina</span>
+                    <p style="color: var(--primary);">De-sillabazione Universale</p>
+                    <span>Fonde parole a fine riga e a cavallo di pagina tutelando i veri composti</span>
                 </div>
                 <input type="checkbox" id="dehyphenCheck" checked>
             </div>
             
             <div class="option-group">
                 <div class="option-text">
-                    <p>Formattazione Tipografica AI</p>
-                    <span>Usa Gemini per titoli, citazioni, corsivi e sintassi (Richiede API)</span>
+                    <p>Analisi Contestuale & Tipografia AI</p>
+                    <span>Deduce dal contenuto il genere, lo stile, le citazioni e i titoli</span>
                 </div>
                 <input type="checkbox" id="aiCorrectToggle" checked>
             </div>
@@ -614,7 +627,7 @@
             <div class="option-group" style="margin-bottom:0;">
                 <div class="option-text">
                     <p>Flusso Continuo per E-Reader</p>
-                    <span>Elimina numeri e interruzioni di pagina per lettura fluida</span>
+                    <span>Elimina numeri di pagina isolati per una lettura scorrevole</span>
                 </div>
                 <input type="checkbox" id="continuousFlowCheck" checked>
             </div>
@@ -631,7 +644,7 @@
             </div>
             <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:var(--text-muted);">
                 <span id="timerEstimate">Tempo: 0s</span>
-                <span id="dehyphenCounter">Parole ricongiunte: 0</span>
+                <span id="dehyphenCounter">Parole unite: 0</span>
                 <span id="pageCounter">Pagina 0 di 0</span>
             </div>
         </div>
@@ -648,6 +661,7 @@
                     <button id="tabRaw" class="tab-btn">Markdown</button>
                 </div>
             </div>
+            <div id="detectedContextContainer" style="margin-bottom: 8px;"></div>
             <div id="textPreviewRendered" class="preview-area preview-rendered"></div>
             <div id="textPreviewRaw" class="preview-area preview-raw hidden"></div>
         </div>
@@ -681,7 +695,6 @@
 
         // Elementi DOM
         const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
         const dropZone = document.getElementById('dropZone');
         const pdfFileInput = document.getElementById('pdfFileInput');
         const fileMeta = document.getElementById('fileMeta');
@@ -702,6 +715,7 @@
         const resultsCard = document.getElementById('resultsCard');
         const textPreviewRendered = document.getElementById('textPreviewRendered');
         const textPreviewRaw = document.getElementById('textPreviewRaw');
+        const detectedContextContainer = document.getElementById('detectedContextContainer');
         const tabRendered = document.getElementById('tabRendered');
         const tabRaw = document.getElementById('tabRaw');
         const wordCountEl = document.getElementById('wordCount');
@@ -734,43 +748,38 @@
         let startTime = 0;
         let totalDehyphenatedCount = 0;
 
-        // DIZIONARIO DEI REFUSI OCR NOTI & PATTERN SPECIFICI DEL TESTO
-        let knownOcrRules = [
-            { pattern: /([ldcnsmtq]|all|dell|nell|coll|sull|dall|un|quest|poc|qualc)\?([a-zàèéìòùA-Z])/gi, replacement: "$1'$2", desc: "Apostrofi (l?uomo -> l'uomo)" },
-            { pattern: /\bpo\?\b/gi, replacement: "po'", desc: "Troncamento po'" },
-            { pattern: /\bC\?è\b/g, replacement: "C'è", desc: "C'è con punto interrogativo" },
-            { pattern: /\bC\?era\b/g, replacement: "C'era", desc: "C'era con punto interrogativo" },
-            { pattern: /\bVencefalite\b/g, replacement: "l'encefalite", desc: "Vencefalite -> l'encefalite" },
-            { pattern: /\bVintossicazione\b/g, replacement: "l'intossicazione", desc: "Vintossicazione -> l'intossicazione" },
-            { pattern: /\bVinganno\b/g, replacement: "l'inganno", desc: "Vinganno -> l'inganno" },
-            { pattern: /\bVimpiego\b/g, replacement: "l'impiego", desc: "Vimpiego -> l'impiego" },
-            { pattern: /\bVorganizz/g, replacement: "l'organizz", desc: "Vorganizz... -> l'organizz..." },
-            { pattern: /\bV'opera\b/g, replacement: "l'opera", desc: "V'opera -> l'opera" },
-            { pattern: /\bV'uomo\b/g, replacement: "l'uomo", desc: "V'uomo -> l'uomo" },
-            { pattern: /\bV'intervento\b/g, replacement: "l'intervento", desc: "V'intervento -> l'intervento" },
-            { pattern: /\bpin\b/gi, replacement: "più", desc: "pin -> più" },
-            { pattern: /\bpit\b/gi, replacement: "più", desc: "pit -> più" },
-            { pattern: /\bgin\b/gi, replacement: "giù", desc: "giù (gin -> giù)" },
-            { pattern: /\bcos!\b/g, replacement: "così", desc: "cos! -> così" },
-            { pattern: /\bcos\{\b/g, replacement: "così", desc: "cos{ -> così" },
-            { pattern: /\bstringomielia\b/gi, replacement: "siringomielia", desc: "stringomielia -> siringomielia" },
-            { pattern: /\bVaccinazione jenneriana\b/gi, replacement: "Vaccinazione jenneriana", desc: "Jenneriana" },
-            { pattern: /\bcow- pox\b/gi, replacement: "cow-pox", desc: "cow-pox ricongiunto" }
+        /**
+         * REGOLE DETERMINISTICHE UNIVERSALI PER QUALSIASI DOCUMENTO
+         * Risolvono errori grafici/OCR ricorrenti indipendentemente dall'argomento
+         */
+        let universalOcrRules = [
+            // Corruzione degli apostrofi con '?' (comunissimo in vecchi motori OCR per elisioni italiane, francesi, inglesi)
+            { pattern: /([ldcnsmtq]|all|dell|nell|coll|sull|dall|un|quest|poc|qualc|quell|mezz|d'altr)\?([a-zàèéìòùáéíóúA-Z])/gi, replacement: "$1'$2", desc: "Apostrofo corrotto da '?' (es. l?anno -> l'anno)" },
+            { pattern: /\b([Cc])\?è\b/g, replacement: "$1'è", desc: "C?è -> C'è" },
+            { pattern: /\b([Cc])\?era\b/g, replacement: "$1'era", desc: "C?era -> C'era" },
+            { pattern: /\bpo\?\b/gi, replacement: "po'", desc: "Troncamento po? -> po'" },
+            { pattern: /\b([a-zA-Zàèéìòù]+)\?([a-zA-Zàèéìòù]+)\b/g, replacement: "$1'$2", desc: "Apostrofo intra-parola corrotto con '?'" },
+            // Segni di punteggiatura scambiati per simboli ASCII errati
+            { pattern: /([a-zA-Zàèéìòù])\s*\{\s*/g, replacement: "$1 ", desc: "Parentesi graffa spuria da scansione" },
+            { pattern: /([a-zA-Zàèéìòù])\s*\|\s*/g, replacement: "$1 ", desc: "Barra verticale spuria da scansione" },
+            // Trattini doppi o combinazioni errate di accenti
+            { pattern: /\bcos!\b/g, replacement: "così", desc: "Punto esclamativo per 'ì' (cos! -> così)" },
+            { pattern: /\bpiu\b/g, replacement: "più", desc: "Ripristino accento più privo di accento" },
+            { pattern: /\b(\d+)\s*o\s*C\b/g, replacement: "$1 °C", desc: "Gradi Celsius corrotti" }
         ];
 
-        // Parole composte storiche/mediche che DEVONO mantenere il trattino se divise a fine riga
-        const preservedCompoundWords = new Set([
-            'cow-pox', 'medico-legale', 'medico-legali', 'medico-chirurgica', 'medico-chirurgiche',
-            'medico-chirurgico', 'medico-chirurgici', 'medico-militare', 'medico-militari',
-            'psico-fisico', 'psico-fisici', 'psico-fisica', 'psico-fisiche', 'austro-tedesco',
-            'austro-tedeschi', 'austro-ungarico', 'austro-ungarica', 'austro-ungarici',
-            'franco-prussiana', 'franco-italiana', 'franco-britannica', 'italo-austriaco',
-            'italo-tedesco', 'italo-turca', 'russo-giapponese', 'anglo-boera', 'shrapnel-granate'
+        /**
+         * Prefissi ed elementi linguistici per proteggere i veri termini composti dalla de-sillabazione
+         */
+        const compoundPrefixes = new Set([
+            'anti', 'post', 'pre', 'pro', 'sub', 'super', 'iper', 'ipo', 'macro', 'micro',
+            'socio', 'storico', 'medico', 'psico', 'fisico', 'chimico', 'geo', 'bio', 'eco',
+            'nord', 'sud', 'est', 'ovest', 'italo', 'franco', 'anglo', 'austro', 'russo', 'afro'
         ]);
 
         function renderDictTable() {
             dictTableBody.innerHTML = "";
-            knownOcrRules.forEach((rule) => {
+            universalOcrRules.forEach((rule) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><code>${rule.desc || rule.pattern}</code></td>
@@ -778,7 +787,7 @@
                 `;
                 dictTableBody.appendChild(tr);
             });
-            dictCountBadge.textContent = `${knownOcrRules.length} regole`;
+            dictCountBadge.textContent = `${universalOcrRules.length} regole`;
         }
         renderDictTable();
 
@@ -786,61 +795,83 @@
             const pat = customPatternInput.value.trim();
             const rep = customReplacementInput.value.trim();
             if (!pat || !rep) {
-                showToast("Inserisci pattern e correzione!");
+                showToast("Inserisci sia il pattern che la correzione!");
                 return;
             }
-            knownOcrRules.unshift({
-                pattern: new RegExp(`\\b${pat}\\b`, 'gi'),
-                replacement: rep,
-                desc: `${pat} -> ${rep}`
-            });
-            renderDictTable();
-            customPatternInput.value = "";
-            customReplacementInput.value = "";
-            showToast("Regola aggiunta al dizionario!");
+            try {
+                const regex = pat.includes('\\') || pat.includes('(') ? new RegExp(pat, 'gi') : new RegExp(`\\b${pat}\\b`, 'gi');
+                universalOcrRules.unshift({
+                    pattern: regex,
+                    replacement: rep,
+                    desc: `${pat} -> ${rep}`
+                });
+                renderDictTable();
+                customPatternInput.value = "";
+                customReplacementInput.value = "";
+                showToast("Regola aggiunta al dizionario!");
+            } catch (e) {
+                showToast("Pattern non valido: " + e.message);
+            }
         });
 
-        function applyKnownOcrCorrections(text) {
+        function applyUniversalOcrCorrections(text) {
             let res = text;
-            for (let rule of knownOcrRules) {
+            for (let rule of universalOcrRules) {
                 res = res.replace(rule.pattern, rule.replacement);
             }
             return res;
         }
 
         /**
-         * MOTORE DI DE-SILLABAZIONE AVANZATO (UNIONE PAROLE A FINE RIGA)
-         * Gestisce:
-         * 1. Caratteri accentati italiani ([a-zA-ZàèéìòùáéíóúÀÈÉÌÒÙÁÉÍÓÚ])
-         * 2. Varianti di trattini d'epoca e invisibili (-, –, —, \u00AD, =, ~)
-         * 3. Spazi accidentali tra parola e trattino (es. "orga - \n nizzazione")
-         * 4. Salvaguardia delle parole composte note (es. "cow-pox", "medico-chirurgico")
+         * EURISTICA UNIVERSALE DI DE-SILLABAZIONE (RICONGIUNGIMENTO PAROLE A CAPO)
+         * Analizza la natura delle due metà separate da trattino per decidere se fonderle o mantenere il trattino
          */
-        function advancedDehyphenate(text) {
+        function shouldKeepHyphen(prefix, suffix) {
+            const pLower = prefix.toLowerCase();
+            const sLower = suffix.toLowerCase();
+
+            // 1. Se il prefisso è un prefisso composto autonomo (es. socio-, nord-, pre-)
+            if (compoundPrefixes.has(pLower)) {
+                return true;
+            }
+
+            // 2. Se entrambe le parti iniziano con la maiuscola (es. Roma-Milano, Austria-Ungheria)
+            const isCapital = (word) => /^[A-ZÀÈÉÌÒÙ]/.test(word);
+            if (isCapital(prefix) && isCapital(suffix)) {
+                return true;
+            }
+
+            // 3. Se la parte a destra o a sinistra è brevissima (es. 'e', 'o', 'a') di norma è una sillabazione tipografica
+            if (pLower.length <= 1 || sLower.length <= 1) {
+                return false;
+            }
+
+            return false;
+        }
+
+        function advancedUniversalDehyphenate(text) {
             if (!text) return "";
             let count = 0;
             const letter = '[a-zA-ZàèéìòùáéíóúÀÈÉÌÒÙÁÉÍÓÚ]';
             
-            // 1. Rimuovi soft hyphen (trattino condizionale invisibile di sillabazione tipografica)
+            // 1. Elimina il soft-hyphen (trattino condizionale invisibile \u00AD)
             text = text.replace(/\u00AD/g, '');
 
-            // 2. Ricongiungi parole spezzate da trattino + a capo (anche multipli o con spazi)
-            const lineBreakHyphenRegex = new RegExp(`(${letter}+)[ \\t]*[-\u2010\u2011\u2012\u2013\u2014~=][ \\t]*\\r?\\n+[ \\t]*(${letter}+)`, 'gu');
+            // 2. Unione parole spezzate da trattino + a capo (inclusi spazi accidentali)
+            const lineBreakRegex = new RegExp(`(${letter}+)[ \\t]*[-\u2010\u2011\u2012\u2013\u2014~=][ \\t]*\\r?\\n+[ \\t]*(${letter}+)`, 'gu');
             
-            text = text.replace(lineBreakHyphenRegex, (match, prefix, suffix) => {
+            text = text.replace(lineBreakRegex, (match, prefix, suffix) => {
                 count++;
-                const candidate = `${prefix}-${suffix}`.toLowerCase();
-                if (preservedCompoundWords.has(candidate)) {
+                if (shouldKeepHyphen(prefix, suffix)) {
                     return `${prefix}-${suffix}`;
                 }
                 return `${prefix}${suffix}`;
             });
 
-            // 3. Ricongiungi parole spezzate con trattino e spazio spurio intra-riga (es. "orga- nizzazione")
-            const intraLineHyphenRegex = new RegExp(`\\b(${letter}{2,})[ \\t]*-[ \\t]+(${letter}{2,})\\b`, 'gu');
-            text = text.replace(intraLineHyphenRegex, (match, prefix, suffix) => {
-                const candidate = `${prefix}-${suffix}`.toLowerCase();
-                if (preservedCompoundWords.has(candidate)) {
+            // 3. Unione parole spezzate con trattino e spazio spurio intra-riga (es. "orga- nizzazione")
+            const intraLineRegex = new RegExp(`\\b(${letter}{2,})[ \\t]*-[ \\t]+(${letter}{2,})\\b`, 'gu');
+            text = text.replace(intraLineRegex, (match, prefix, suffix) => {
+                if (shouldKeepHyphen(prefix, suffix)) {
                     return `${prefix}-${suffix}`;
                 }
                 count++;
@@ -849,17 +880,15 @@
 
             totalDehyphenatedCount += count;
             if (dehyphenCounter) {
-                dehyphenCounter.textContent = `Parole ricongiunte: ${totalDehyphenatedCount}`;
+                dehyphenCounter.textContent = `Parole unite: ${totalDehyphenatedCount}`;
             }
 
             return text;
         }
 
         /**
-         * RICONGIUNGIMENTO A CAVALLO DI PAGINA (CROSS-PAGE STITCHING)
-         * Se la pagina N finisce con parola troncata (es. "organizza-")
-         * e la pagina N+1 inizia con la continuazione (es. "zione"),
-         * fonde la parola prima di passare la pagina all'AI.
+         * RICONGIUNGIMENTO A CAVALLO DI PAGINA (CROSS-PAGE)
+         * Unisce l'ultima parola spezzata della pagina N con la prima parola della pagina N+1
          */
         function stitchCrossPageHyphens(pages) {
             const letter = '[a-zA-ZàèéìòùáéíóúÀÈÉÌÒÙÁÉÍÓÚ]';
@@ -876,18 +905,15 @@
                 if (endMatch && startMatch) {
                     const prefix = endMatch[1];
                     const suffix = startMatch[1];
-                    const candidate = `${prefix}-${suffix}`.toLowerCase();
-                    const mergedWord = preservedCompoundWords.has(candidate) ? `${prefix}-${suffix}` : `${prefix}${suffix}`;
+                    const mergedWord = shouldKeepHyphen(prefix, suffix) ? `${prefix}-${suffix}` : `${prefix}${suffix}`;
 
-                    // Sostituisci il tronco finale nella pagina corrente con la parola unita intera
                     pages[i] = currentPage.replace(endHyphenRegex, mergedWord);
-                    // Rimuovi il suffisso iniziale dalla pagina successiva
                     pages[i + 1] = nextPage.replace(startWordRegex, '').trimStart();
                     totalDehyphenatedCount++;
                 }
             }
             if (dehyphenCounter) {
-                dehyphenCounter.textContent = `Parole ricongiunte: ${totalDehyphenatedCount}`;
+                dehyphenCounter.textContent = `Parole unite: ${totalDehyphenatedCount}`;
             }
             return pages;
         }
@@ -938,7 +964,7 @@
                 const resJson = await response.json();
 
                 if (response.ok) {
-                    showDiagnostic(`Connessione verificata con successo! Modello: ${chosenModel}`, "success");
+                    showDiagnostic(`Connessione verificata con successo! Modello pronto: ${chosenModel}`, "success");
                 } else {
                     const errDetails = resJson.error?.message || `Errore HTTP ${response.status}`;
                     const errCode = resJson.error?.status || "ERRORE";
@@ -998,7 +1024,7 @@
 
             mainActionBtn.removeAttribute('disabled');
             mainActionBtn.className = "main-btn active";
-            mainActionBtn.querySelector('span').textContent = "Avvia Trascrizione";
+            mainActionBtn.querySelector('span').textContent = "Avvia Elaborazione";
         });
 
         removeFileBtn.addEventListener('click', resetApp);
@@ -1017,6 +1043,7 @@
             downloadMdBtn.classList.add('hidden');
             downloadTxtBtn.classList.add('hidden');
             copyBtn.classList.add('hidden');
+            detectedContextContainer.innerHTML = "";
             mainActionBtn.setAttribute('disabled', 'true');
             mainActionBtn.className = "main-btn";
             mainActionBtn.querySelector('span').textContent = "Carica un PDF";
@@ -1043,26 +1070,37 @@
             }).join('');
         }
 
-        async function cleanPageWithGemini(text, key, model) {
+        /**
+         * PROMPT UNIVERSALE DI ANALISI CONTESTUALE PER GEMINI
+         * Si adatta a qualunque opera (saggio, romanzo, testo antico, contemporaneo, tecnico)
+         */
+        async function cleanPageWithGeminiUniversal(text, key, model) {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
             
             const systemPrompt = 
-`Sei un eccellente filologo e redattore tipografico. Trascrivi e correggi il testo scansionato da OCR del libro storico del 1931 ("La guerra e le arti sanitarie" di Gaetano Boschi), applicando una rigorosa formattazione tipografica Markdown per e-reader.
+`Sei un revisore filologico ed esperto tipografo editoriale. Il tuo compito è trascrivere e ripulire il testo estratto tramite scansione OCR da un libro o documento a stampa, formattandolo in Markdown per e-reader.
 
-REGOLE TASSATIVE:
-1. UNIONE DELLE PAROLE A CAPO (DE-SILLABAZIONE): Fonde e ricongiungi SEMPRE le parole spezzate da sillabazione o trattini di fine riga (es. 'orga- nizzazione' -> 'organizzazione', 'par- la' -> 'parla'). Nessuna parola deve rimanere interrotta a metà.
-2. TITOLI E INTESTAZIONI: Applica stili Markdown coerenti:
-   - '# ' per le parti primarie (es. # PARTE I).
-   - '## ' per i capitoli o sezioni intitolate.
-   - '### ' per i paragrafi numerati o sotto-sezioni (es. ### I. Il vaccino).
-3. BLOCCHI DI CITAZIONE: Usa '>' (blockquote) per rapporti sanitari, perizie, lettere di soldati/ufficiali, citazioni poetiche (Parini, d'Annunzio) e articoli di giornale.
-4. CORSIVI: Usa il corsivo (*parola*) per:
-   - Termini stranieri o in lingua originale (latino, francese, tedesco: es. *Nihil innovetur...*, *cow-pox*, *décrochage*, *camptocormia*, *Kultur*, *ex-voto*, ecc.).
-   - Titoli di opere, periodici e saggi citati (*Le Feu*, *Il nostro soldato*, *Corriere della Sera*, ecc.).
-5. FLUSSO CONTINUO: Elimina categoricamente numeri di pagina isolati, testatine e piè di pagina. Nessuna riga divisoria tra pagine.
-6. CORREZIONE REFUSI OCR: Ripara lettere corrotte, punti interrogativi spuri e simboli di scansione.
-7. FEDELTÀ STORICA: MANTIENI intatta la lingua, la grafia e la sintassi del 1931 (es. "giú", "siasi", "cosí", "coi"), senza modernizzarla.
-8. RESTITUZIONE: Restituisci ESCLUSIVAMENTE il testo formattato in Markdown, senza preamboli né commenti.`;
+ISTRUZIONI DI ANALISI CONTESTUALE:
+1. RICONOSCIMENTO AUTONOMO DEL CONTESTO:
+   - Deduci dal testo stesso: lingua, epoca di stesura (es. contemporanea, inizio '900, '800, latino, ecc.), genere (saggistico, narrativo, accademico, epistolare, poetico) e ambito specialistico (medico, storico, filosofico, giuridico, scientifico).
+   - Rispetta fedelmente la grafia, il registro lessicale e le convenzioni fonetiche/ortografiche dell'epoca originale dell'autore (es. accenti acuti o gravi originali, forme tronche, arcaismi legittimi). Non modernizzare né parafrasare.
+
+2. DE-SILLABAZIONE E RICONGIUNGIMENTO DELLE PAROLE:
+   - Salda SEMPRE le parole spezzate da sillabazione o trattini di fine riga (es. "orga- nizzazione" -> "organizzazione", "in- teresse" -> "interesse").
+   - Distingui e MANTIENI i veri composti grammaticali (es. "nord-est", "socio-culturale", composti con trattino autentico).
+
+3. GERARCHIA TIPOGRAFICA MARKDOWN:
+   - Usa '# ' per i titoli primari / macro-sezioni (Libri, Parti).
+   - Usa '## ' per i capitoli o sezioni intitolate.
+   - Usa '### ' per sottosezioni numerate o paragrafi tematici.
+   - Usa '> ' (blockquote) per lettere, citazioni d'autore, decreti, frammenti documentari o versi poetici.
+   - Usa il corsivo (*testo*) per titoli di opere e periodici citati e per parole o locuzioni in lingua straniera/latino rispetto alla lingua dominante del testo.
+
+4. FLUSSO CONTINUO PER E-READER:
+   - Elimina numeri di pagina isolati, testatine correnti e piè di pagina ripetitivi. Nessuna riga divisoria tra le pagine.
+
+5. RESTITUZIONE PURA:
+   - Restituisci ESCLUSIVAMENTE il testo trascritto e corretto in Markdown, senza preamboli, senza spiegazioni, senza commenti a margine.`;
 
             const payload = {
                 contents: [{ parts: [{ text: text }] }],
@@ -1125,6 +1163,7 @@ REGOLE TASSATIVE:
                 downloadMdBtn.classList.add('hidden');
                 downloadTxtBtn.classList.add('hidden');
                 copyBtn.classList.add('hidden');
+                detectedContextContainer.innerHTML = "";
 
                 startTime = Date.now();
                 timerInterval = setInterval(() => {
@@ -1148,7 +1187,7 @@ REGOLE TASSATIVE:
 
                         let rawPages = [];
 
-                        // FASE 1: Estrazione grezza riga per riga da PDF
+                        // FASE 1: Estrazione grezza riga per riga dal PDF
                         for (let pageNum = startP; pageNum <= endP; pageNum++) {
                             if (!isProcessing) return;
 
@@ -1180,20 +1219,20 @@ REGOLE TASSATIVE:
 
                             let pageString = cleaned.join('\n');
 
-                            // De-sillabazione intra-pagina
+                            // De-sillabazione euristica preliminare
                             if (dehyphenCheck.checked) {
-                                pageString = advancedDehyphenate(pageString);
+                                pageString = advancedUniversalDehyphenate(pageString);
                             }
 
-                            // Pulizia preliminare dal dizionario dei termini noti
+                            // Correzione artefatti grafici comuni
                             if (dictCorrectionCheck.checked) {
-                                pageString = applyKnownOcrCorrections(pageString);
+                                pageString = applyUniversalOcrCorrections(pageString);
                             }
 
                             rawPages.push(pageString);
 
                             const currentIndex = (pageNum - startP) + 1;
-                            const pcent = Math.round((currentIndex / pagesToProcess) * 50); // Primi 50%
+                            const pcent = Math.round((currentIndex / pagesToProcess) * 50);
                             progressBar.style.width = pcent + "%";
                             progressPercent.textContent = pcent + "%";
                             pageCounter.textContent = `${currentIndex} di ${pagesToProcess}`;
@@ -1204,7 +1243,7 @@ REGOLE TASSATIVE:
                             rawPages = stitchCrossPageHyphens(rawPages);
                         }
 
-                        // FASE 3: Elaborazione con Gemini AI o assemblaggio finale
+                        // FASE 3: Elaborazione e Formattazione Tipografica AI
                         let processedPages = [];
                         for (let i = 0; i < rawPages.length; i++) {
                             if (!isProcessing) return;
@@ -1213,19 +1252,19 @@ REGOLE TASSATIVE:
                             let pageString = rawPages[i];
 
                             if (aiCorrectToggle.checked && pageString.trim().length > 15) {
-                                progressStatus.textContent = `Tipografia AI pag. ${actualPageNum}...`;
+                                progressStatus.textContent = `Analisi & Tipografia AI pag. ${actualPageNum}...`;
                                 try {
-                                    pageString = await cleanPageWithGemini(pageString, activeKey, model);
+                                    pageString = await cleanPageWithGeminiUniversal(pageString, activeKey, model);
                                     
-                                    // Nuova passata di de-sillabazione e dizionario per sicurezza sul testo generato
+                                    // Controllo finale sulla de-sillabazione del testo formattato
                                     if (dehyphenCheck.checked) {
-                                        pageString = advancedDehyphenate(pageString);
+                                        pageString = advancedUniversalDehyphenate(pageString);
                                     }
                                     if (dictCorrectionCheck.checked) {
-                                        pageString = applyKnownOcrCorrections(pageString);
+                                        pageString = applyUniversalOcrCorrections(pageString);
                                     }
                                 } catch (e) {
-                                    console.warn(`Fallback su testo pulito da dizionario per pag. ${actualPageNum}: ${e.message}`);
+                                    console.warn(`Fallback su testo pulito per pag. ${actualPageNum}: ${e.message}`);
                                 }
 
                                 if (delayTime > 0) {
@@ -1243,16 +1282,15 @@ REGOLE TASSATIVE:
                         }
 
                         if (isProcessing) {
-                            // Unione globale e de-sillabazione finale complessiva
                             extractedText = processedPages.join('\n\n');
                             if (dehyphenCheck.checked) {
-                                extractedText = advancedDehyphenate(extractedText);
+                                extractedText = advancedUniversalDehyphenate(extractedText);
                             }
                             extractedText = extractedText.replace(/\n{3,}/g, '\n\n');
                             showFinalResults();
                         }
                     } catch (e) {
-                        alert("Errore PDF: " + e.message);
+                        alert("Errore durante l'elaborazione del PDF: " + e.message);
                         resetApp();
                     }
                 };
@@ -1285,7 +1323,7 @@ REGOLE TASSATIVE:
 
             mainActionBtn.removeAttribute('disabled');
             mainActionBtn.className = "main-btn active";
-            mainActionBtn.querySelector('span').textContent = "Carica Nuovo";
+            mainActionBtn.querySelector('span').textContent = "Carica Altro Volume";
             showToast(`Completato! ${totalDehyphenatedCount} parole ricongiunte.`);
         }
 
