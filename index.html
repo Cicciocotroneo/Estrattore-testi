@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -228,21 +229,23 @@
             border-radius: 6px;
         }
 
-        .context-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--accent-bg);
-            color: var(--accent-text);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 700;
-            margin-top: 4px;
+        .cost-box {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-top: 10px;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #065f46;
+        }
+        .dark-theme .cost-box {
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
         }
 
         .dict-table-container {
-            max-height: 180px;
+            max-height: 160px;
             overflow-y: auto;
             border: 1px solid var(--border-color);
             border-radius: 10px;
@@ -376,7 +379,10 @@
             font-style: italic; 
             border-radius: 0 8px 8px 0;
         }
-        .preview-rendered em, .preview-rendered i { font-style: italic; }
+        .preview-rendered em, .preview-rendered i { 
+            font-style: italic; 
+            color: var(--primary);
+        }
 
         .footer-controls { 
             position: fixed; 
@@ -477,7 +483,7 @@
                 </div>
                 <div>
                     <h1>Universal Book Cleaner AI</h1>
-                    <p class="subtitle">Analisi Contestuale & Formattazione per E-Reader</p>
+                    <p class="subtitle">Ottimizzazione Costi, Corsivo & Tipografia</p>
                 </div>
             </div>
             <button id="themeToggle" class="theme-btn" title="Cambia tema">
@@ -485,12 +491,12 @@
             </button>
         </header>
 
-        <!-- Configurazione Motore AI -->
+        <!-- Configurazione Motore AI & Opzioni Salva-Costi -->
         <div class="panel">
             <div class="panel-title" id="toggleAiPanel">
                 <span class="panel-title-text">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    Motore AI & Parametri
+                    Motore AI & Controllo Costi
                 </span>
                 <span id="aiToggleIcon">▼</span>
             </div>
@@ -505,33 +511,55 @@
                     <div>
                         <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">MODELLO GEMINI</label>
                         <select id="modelSelector">
-                            <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (Consigliato)</option>
-                            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite (Super economico)</option>
+                            <option value="gemini-2.5-flash-lite" selected>Gemini 2.5 Flash-Lite (Super economico)</option>
+                            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Standard)</option>
                         </select>
                     </div>
                     <div>
-                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">PAUSA RICHIESTE</label>
-                        <select id="delaySelector">
-                            <option value="4000" selected>4 sec (Free Tier Anti-Limit)</option>
-                            <option value="1500">1.5 sec (Piano a consumo)</option>
-                            <option value="0">Nessuna (Batch Pay)</option>
+                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">ACCORPA PAGINE (BATCH)</label>
+                        <select id="batchSizeSelector">
+                            <option value="3" selected>3 Pagine / Chiamata (-66% costi)</option>
+                            <option value="4">4 Pagine / Chiamata (-75% costi)</option>
+                            <option value="1">1 Pagina / Chiamata (Massima precisione)</option>
                         </select>
                     </div>
                 </div>
 
-                <button id="testApiBtn" style="width:100%; padding:9px; background:transparent; border:1px solid var(--border-color); color:var(--text-main); border-radius:10px; font-weight:600; font-size:11px; cursor:pointer;">
+                <div class="grid-2" style="margin-bottom:10px;">
+                    <div>
+                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">PAUSA TRA CHIAMATE</label>
+                        <select id="delaySelector">
+                            <option value="4000" selected>4 sec (Anti-Limite Free Tier)</option>
+                            <option value="1500">1.5 sec (Veloce)</option>
+                            <option value="0">Nessuna (Istantanea)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">SMART FILTER (SALVA-TOKEN)</label>
+                        <select id="smartFilterSelector">
+                            <option value="enabled" selected>Attivo: Salta AI se pagina pulita</option>
+                            <option value="disabled">Disattivo: Invia sempre tutto all'AI</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="cost-box">
+                    💡 <b>Come avere 0 € di addebito:</b> su Google AI Studio genera una chiave in un progetto <i>senza carta di credito</i>. Con il modello <b>Flash-Lite</b> + batch da 3 pagine, rimani interamente nel Free Tier gratuito senza spendere un centesimo.
+                </div>
+
+                <button id="testApiBtn" style="width:100%; margin-top:10px; padding:9px; background:transparent; border:1px solid var(--border-color); color:var(--text-main); border-radius:10px; font-weight:600; font-size:11px; cursor:pointer;">
                     🧪 Verifica API & Connessione
                 </button>
                 <div id="diagnosticOutput" class="diagnostic-box"></div>
             </div>
         </div>
 
-        <!-- Regole OCR Universali & Personalizzate -->
+        <!-- Regole OCR & Pulizia Locale -->
         <div class="panel">
             <div class="panel-title" id="toggleDictPanel">
                 <span class="panel-title-text">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
-                    Refusi Grafici & Pattern OCR Comuni
+                    Filtro Locale Deterministico (Zero Token)
                 </span>
                 <span class="badge-count" id="dictCountBadge">0 regole</span>
             </div>
@@ -539,8 +567,8 @@
             <div id="dictPanelBody">
                 <div class="option-group" style="margin-bottom:8px;">
                     <div class="option-text">
-                        <p>Pre-filtro Deterministico</p>
-                        <span>Sostituzione immediata degli artefatti di scansione più diffusi</span>
+                        <p>Correzione Glifi & Refusi Comuni</p>
+                        <span>Ripara l'apostrofo corrotto da '?', doppi spazi e caratteri spuri</span>
                     </div>
                     <input type="checkbox" id="dictCorrectionCheck" checked>
                 </div>
@@ -549,18 +577,16 @@
                     <table class="dict-table" id="dictTable">
                         <thead>
                             <tr>
-                                <th>Pattern / Artefatto OCR</th>
-                                <th>Correzione Tipografica</th>
+                                <th>Pattern OCR</th>
+                                <th>Sostituzione</th>
                             </tr>
                         </thead>
-                        <tbody id="dictTableBody">
-                            <!-- Popolato dinamicamente da JS con regole universali -->
-                        </tbody>
+                        <tbody id="dictTableBody"></tbody>
                     </table>
                 </div>
 
                 <div style="display:flex; gap:6px; margin-top:8px;">
-                    <input type="text" id="customPatternInput" placeholder="Pattern (es. po\? o parola errata)" style="flex:1;">
+                    <input type="text" id="customPatternInput" placeholder="Pattern (es. po\?)" style="flex:1;">
                     <input type="text" id="customReplacementInput" placeholder="Sostituzione (es. po')" style="flex:1;">
                     <button id="addRuleBtn" style="padding:0 12px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; font-size:11px; cursor:pointer;">+ Aggiungi</button>
                 </div>
@@ -572,7 +598,7 @@
             <input type="file" id="pdfFileInput" accept="application/pdf" style="display:none">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
             <p>Seleziona qualsiasi PDF da elaborare</p>
-            <span>Riconoscimento autonomo di epoca, lingua e argomento</span>
+            <span>Riconoscimento autonomo di epoca, lingua, font e corsivo</span>
         </div>
 
         <!-- Info File -->
@@ -607,19 +633,27 @@
                 </div>
             </div>
 
-            <!-- OPZIONE: De-sillabazione universale -->
+            <!-- OPZIONE: Riconoscimento Corsivo Hardware/Font -->
             <div class="option-group" style="background: rgba(99, 102, 241, 0.05); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.15);">
                 <div class="option-text">
-                    <p style="color: var(--primary);">De-sillabazione Universale</p>
-                    <span>Fonde parole a fine riga e a cavallo di pagina tutelando i veri composti</span>
+                    <p style="color: var(--primary);">Estrazione Corsivo dai Font PDF</p>
+                    <span>Intercetta stili Italic/Oblique e inclinazioni matrice dei font</span>
+                </div>
+                <input type="checkbox" id="detectFontItalicsCheck" checked>
+            </div>
+
+            <div class="option-group">
+                <div class="option-text">
+                    <p>De-sillabazione Universale</p>
+                    <span>Fonde parole spezzate a fine riga e tra le pagine</span>
                 </div>
                 <input type="checkbox" id="dehyphenCheck" checked>
             </div>
             
             <div class="option-group">
                 <div class="option-text">
-                    <p>Analisi Contestuale & Tipografia AI</p>
-                    <span>Deduce dal contenuto il genere, lo stile, le citazioni e i titoli</span>
+                    <p>Ottimizzazione AI (Gemini)</p>
+                    <span>Disattiva per elaborazione 100% gratuita offline a costo zero</span>
                 </div>
                 <input type="checkbox" id="aiCorrectToggle" checked>
             </div>
@@ -627,7 +661,7 @@
             <div class="option-group" style="margin-bottom:0;">
                 <div class="option-text">
                     <p>Flusso Continuo per E-Reader</p>
-                    <span>Elimina numeri di pagina isolati per una lettura scorrevole</span>
+                    <span>Elimina numeri di pagina isolati per lettura fluida</span>
                 </div>
                 <input type="checkbox" id="continuousFlowCheck" checked>
             </div>
@@ -644,7 +678,7 @@
             </div>
             <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:var(--text-muted);">
                 <span id="timerEstimate">Tempo: 0s</span>
-                <span id="dehyphenCounter">Parole unite: 0</span>
+                <span id="aiCallCounter">Chiamate AI: 0</span>
                 <span id="pageCounter">Pagina 0 di 0</span>
             </div>
         </div>
@@ -661,7 +695,6 @@
                     <button id="tabRaw" class="tab-btn">Markdown</button>
                 </div>
             </div>
-            <div id="detectedContextContainer" style="margin-bottom: 8px;"></div>
             <div id="textPreviewRendered" class="preview-area preview-rendered"></div>
             <div id="textPreviewRaw" class="preview-area preview-raw hidden"></div>
         </div>
@@ -711,11 +744,10 @@
         const progressStatus = document.getElementById('progressStatus');
         const pageCounter = document.getElementById('pageCounter');
         const timerEstimate = document.getElementById('timerEstimate');
-        const dehyphenCounter = document.getElementById('dehyphenCounter');
+        const aiCallCounter = document.getElementById('aiCallCounter');
         const resultsCard = document.getElementById('resultsCard');
         const textPreviewRendered = document.getElementById('textPreviewRendered');
         const textPreviewRaw = document.getElementById('textPreviewRaw');
-        const detectedContextContainer = document.getElementById('detectedContextContainer');
         const tabRendered = document.getElementById('tabRendered');
         const tabRaw = document.getElementById('tabRaw');
         const wordCountEl = document.getElementById('wordCount');
@@ -726,10 +758,13 @@
         const testApiBtn = document.getElementById('testApiBtn');
         const diagnosticOutput = document.getElementById('diagnosticOutput');
         const modelSelector = document.getElementById('modelSelector');
+        const batchSizeSelector = document.getElementById('batchSizeSelector');
         const delaySelector = document.getElementById('delaySelector');
+        const smartFilterSelector = document.getElementById('smartFilterSelector');
         const startPageInput = document.getElementById('startPageInput');
         const endPageInput = document.getElementById('endPageInput');
 
+        const detectFontItalicsCheck = document.getElementById('detectFontItalicsCheck');
         const dehyphenCheck = document.getElementById('dehyphenCheck');
         const aiCorrectToggle = document.getElementById('aiCorrectToggle');
         const continuousFlowCheck = document.getElementById('continuousFlowCheck');
@@ -746,31 +781,24 @@
         let isProcessing = false;
         let timerInterval = null;
         let startTime = 0;
-        let totalDehyphenatedCount = 0;
+        let totalAiCalls = 0;
 
         /**
-         * REGOLE DETERMINISTICHE UNIVERSALI PER QUALSIASI DOCUMENTO
-         * Risolvono errori grafici/OCR ricorrenti indipendentemente dall'argomento
+         * REGOLE DETERMINISTICHE UNIVERSALI (Eseguite in locale a 0 Token)
          */
         let universalOcrRules = [
-            // Corruzione degli apostrofi con '?' (comunissimo in vecchi motori OCR per elisioni italiane, francesi, inglesi)
-            { pattern: /([ldcnsmtq]|all|dell|nell|coll|sull|dall|un|quest|poc|qualc|quell|mezz|d'altr)\?([a-zàèéìòùáéíóúA-Z])/gi, replacement: "$1'$2", desc: "Apostrofo corrotto da '?' (es. l?anno -> l'anno)" },
+            { pattern: /([ldcnsmtq]|all|dell|nell|coll|sull|dall|un|quest|poc|qualc|quell|mezz|d'altr)\?([a-zàèéìòùáéíóúA-Z])/gi, replacement: "$1'$2", desc: "Apostrofo corrotto da '?'" },
             { pattern: /\b([Cc])\?è\b/g, replacement: "$1'è", desc: "C?è -> C'è" },
             { pattern: /\b([Cc])\?era\b/g, replacement: "$1'era", desc: "C?era -> C'era" },
             { pattern: /\bpo\?\b/gi, replacement: "po'", desc: "Troncamento po? -> po'" },
             { pattern: /\b([a-zA-Zàèéìòù]+)\?([a-zA-Zàèéìòù]+)\b/g, replacement: "$1'$2", desc: "Apostrofo intra-parola corrotto con '?'" },
-            // Segni di punteggiatura scambiati per simboli ASCII errati
             { pattern: /([a-zA-Zàèéìòù])\s*\{\s*/g, replacement: "$1 ", desc: "Parentesi graffa spuria da scansione" },
             { pattern: /([a-zA-Zàèéìòù])\s*\|\s*/g, replacement: "$1 ", desc: "Barra verticale spuria da scansione" },
-            // Trattini doppi o combinazioni errate di accenti
             { pattern: /\bcos!\b/g, replacement: "così", desc: "Punto esclamativo per 'ì' (cos! -> così)" },
-            { pattern: /\bpiu\b/g, replacement: "più", desc: "Ripristino accento più privo di accento" },
+            { pattern: /\bpiu\b/g, replacement: "più", desc: "Ripristino accento più" },
             { pattern: /\b(\d+)\s*o\s*C\b/g, replacement: "$1 °C", desc: "Gradi Celsius corrotti" }
         ];
 
-        /**
-         * Prefissi ed elementi linguistici per proteggere i veri termini composti dalla de-sillabazione
-         */
         const compoundPrefixes = new Set([
             'anti', 'post', 'pre', 'pro', 'sub', 'super', 'iper', 'ipo', 'macro', 'micro',
             'socio', 'storico', 'medico', 'psico', 'fisico', 'chimico', 'geo', 'bio', 'eco',
@@ -795,20 +823,16 @@
             const pat = customPatternInput.value.trim();
             const rep = customReplacementInput.value.trim();
             if (!pat || !rep) {
-                showToast("Inserisci sia il pattern che la correzione!");
+                showToast("Inserisci pattern e correzione!");
                 return;
             }
             try {
                 const regex = pat.includes('\\') || pat.includes('(') ? new RegExp(pat, 'gi') : new RegExp(`\\b${pat}\\b`, 'gi');
-                universalOcrRules.unshift({
-                    pattern: regex,
-                    replacement: rep,
-                    desc: `${pat} -> ${rep}`
-                });
+                universalOcrRules.unshift({ pattern: regex, replacement: rep, desc: `${pat} -> ${rep}` });
                 renderDictTable();
                 customPatternInput.value = "";
                 customReplacementInput.value = "";
-                showToast("Regola aggiunta al dizionario!");
+                showToast("Regola aggiunta al dizionario locale!");
             } catch (e) {
                 showToast("Pattern non valido: " + e.message);
             }
@@ -822,74 +846,34 @@
             return res;
         }
 
-        /**
-         * EURISTICA UNIVERSALE DI DE-SILLABAZIONE (RICONGIUNGIMENTO PAROLE A CAPO)
-         * Analizza la natura delle due metà separate da trattino per decidere se fonderle o mantenere il trattino
-         */
         function shouldKeepHyphen(prefix, suffix) {
             const pLower = prefix.toLowerCase();
             const sLower = suffix.toLowerCase();
-
-            // 1. Se il prefisso è un prefisso composto autonomo (es. socio-, nord-, pre-)
-            if (compoundPrefixes.has(pLower)) {
-                return true;
-            }
-
-            // 2. Se entrambe le parti iniziano con la maiuscola (es. Roma-Milano, Austria-Ungheria)
+            if (compoundPrefixes.has(pLower)) return true;
             const isCapital = (word) => /^[A-ZÀÈÉÌÒÙ]/.test(word);
-            if (isCapital(prefix) && isCapital(suffix)) {
-                return true;
-            }
-
-            // 3. Se la parte a destra o a sinistra è brevissima (es. 'e', 'o', 'a') di norma è una sillabazione tipografica
-            if (pLower.length <= 1 || sLower.length <= 1) {
-                return false;
-            }
-
+            if (isCapital(prefix) && isCapital(suffix)) return true;
+            if (pLower.length <= 1 || sLower.length <= 1) return false;
             return false;
         }
 
         function advancedUniversalDehyphenate(text) {
             if (!text) return "";
-            let count = 0;
             const letter = '[a-zA-ZàèéìòùáéíóúÀÈÉÌÒÙÁÉÍÓÚ]';
-            
-            // 1. Elimina il soft-hyphen (trattino condizionale invisibile \u00AD)
             text = text.replace(/\u00AD/g, '');
 
-            // 2. Unione parole spezzate da trattino + a capo (inclusi spazi accidentali)
             const lineBreakRegex = new RegExp(`(${letter}+)[ \\t]*[-\u2010\u2011\u2012\u2013\u2014~=][ \\t]*\\r?\\n+[ \\t]*(${letter}+)`, 'gu');
-            
             text = text.replace(lineBreakRegex, (match, prefix, suffix) => {
-                count++;
-                if (shouldKeepHyphen(prefix, suffix)) {
-                    return `${prefix}-${suffix}`;
-                }
-                return `${prefix}${suffix}`;
+                return shouldKeepHyphen(prefix, suffix) ? `${prefix}-${suffix}` : `${prefix}${suffix}`;
             });
 
-            // 3. Unione parole spezzate con trattino e spazio spurio intra-riga (es. "orga- nizzazione")
             const intraLineRegex = new RegExp(`\\b(${letter}{2,})[ \\t]*-[ \\t]+(${letter}{2,})\\b`, 'gu');
             text = text.replace(intraLineRegex, (match, prefix, suffix) => {
-                if (shouldKeepHyphen(prefix, suffix)) {
-                    return `${prefix}-${suffix}`;
-                }
-                count++;
-                return `${prefix}${suffix}`;
+                return shouldKeepHyphen(prefix, suffix) ? `${prefix}-${suffix}` : `${prefix}${suffix}`;
             });
-
-            totalDehyphenatedCount += count;
-            if (dehyphenCounter) {
-                dehyphenCounter.textContent = `Parole unite: ${totalDehyphenatedCount}`;
-            }
 
             return text;
         }
 
-        /**
-         * RICONGIUNGIMENTO A CAVALLO DI PAGINA (CROSS-PAGE)
-         * Unisce l'ultima parola spezzata della pagina N con la prima parola della pagina N+1
-         */
         function stitchCrossPageHyphens(pages) {
             const letter = '[a-zA-ZàèéìòùáéíóúÀÈÉÌÒÙÁÉÍÓÚ]';
             const endHyphenRegex = new RegExp(`(${letter}+)[ \\t]*[-\u2010\u2011\u2012\u2013\u2014~=][ \\t]*$`, 'u');
@@ -909,11 +893,7 @@
 
                     pages[i] = currentPage.replace(endHyphenRegex, mergedWord);
                     pages[i + 1] = nextPage.replace(startWordRegex, '').trimStart();
-                    totalDehyphenatedCount++;
                 }
-            }
-            if (dehyphenCounter) {
-                dehyphenCounter.textContent = `Parole unite: ${totalDehyphenatedCount}`;
             }
             return pages;
         }
@@ -951,9 +931,7 @@
             showDiagnostic(`Connessione a ${chosenModel}...`, "success");
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${chosenModel}:generateContent?key=${activeKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: "Rispondi esclusivamente con 'OK'." }] }]
-            };
+            const payload = { contents: [{ parts: [{ text: "Rispondi esclusivamente con 'OK'." }] }] };
 
             try {
                 const response = await fetch(url, {
@@ -1033,7 +1011,7 @@
             selectedFile = null;
             extractedText = "";
             isProcessing = false;
-            totalDehyphenatedCount = 0;
+            totalAiCalls = 0;
             clearInterval(timerInterval);
             pdfFileInput.value = "";
             fileMeta.classList.add('hidden');
@@ -1043,7 +1021,6 @@
             downloadMdBtn.classList.add('hidden');
             downloadTxtBtn.classList.add('hidden');
             copyBtn.classList.add('hidden');
-            detectedContextContainer.innerHTML = "";
             mainActionBtn.setAttribute('disabled', 'true');
             mainActionBtn.className = "main-btn";
             mainActionBtn.querySelector('span').textContent = "Carica un PDF";
@@ -1071,39 +1048,37 @@
         }
 
         /**
-         * PROMPT UNIVERSALE DI ANALISI CONTESTUALE PER GEMINI
-         * Si adatta a qualunque opera (saggio, romanzo, testo antico, contemporaneo, tecnico)
+         * PROMPT DI REVISIONE TIPOGRAFICA CON POTENZIAMENTO CORSIVO & RIDUZIONE OVERHEAD
          */
-        async function cleanPageWithGeminiUniversal(text, key, model) {
+        async function cleanBatchWithGemini(batchText, key, model) {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
             
             const systemPrompt = 
-`Sei un revisore filologico ed esperto tipografo editoriale. Il tuo compito è trascrivere e ripulire il testo estratto tramite scansione OCR da un libro o documento a stampa, formattandolo in Markdown per e-reader.
+`Sei un eccellente filologo e tipografo editoriale. Trascrivi e pulisci il testo estratto da scansione OCR, restituendolo in Markdown continuo per e-reader.
 
-ISTRUZIONI DI ANALISI CONTESTUALE:
-1. RICONOSCIMENTO AUTONOMO DEL CONTESTO:
-   - Deduci dal testo stesso: lingua, epoca di stesura (es. contemporanea, inizio '900, '800, latino, ecc.), genere (saggistico, narrativo, accademico, epistolare, poetico) e ambito specialistico (medico, storico, filosofico, giuridico, scientifico).
-   - Rispetta fedelmente la grafia, il registro lessicale e le convenzioni fonetiche/ortografiche dell'epoca originale dell'autore (es. accenti acuti o gravi originali, forme tronche, arcaismi legittimi). Non modernizzare né parafrasare.
+REGOLE RIGIDE:
+1. RICONOSCIMENTO DEL CORSIVO (*testo*):
+   - Preserva e consolida i marcatori *testo* già inseriti dall'estrattore font.
+   - Applica sistematicamente il corsivo Markdown (*termine*) a:
+     a) Locuzioni, massime e termini latini (es. *Nihil innovetur...*, *ex non usu*, *vis medicatrix*, *tabes dorsalis*).
+     b) Forestierismi e termini stranieri (es. *cow-pox*, *Kultur*, *décrochage*, *shrapnel*, *business is business*).
+     c) Titoli di libri, saggi, riviste e testate (es. *Corriere della Sera*, *Le Feu*, *L'innesto del vaiuolo*).
+     d) Nomenclatura scientifica o medica latina (es. *Bacillus perfringens*, *Spirochaeta pallida*).
 
-2. DE-SILLABAZIONE E RICONGIUNGIMENTO DELLE PAROLE:
-   - Salda SEMPRE le parole spezzate da sillabazione o trattini di fine riga (es. "orga- nizzazione" -> "organizzazione", "in- teresse" -> "interesse").
-   - Distingui e MANTIENI i veri composti grammaticali (es. "nord-est", "socio-culturale", composti con trattino autentico).
+2. DE-SILLABAZIONE:
+   - Salda SEMPRE le parole spezzate da sillabazione o trattini di fine riga (es. "orga- nizzazione" -> "organizzazione").
+   - Mantieni i trattini solo nei veri composti grammaticali (es. "nord-est", "socio-culturale").
 
-3. GERARCHIA TIPOGRAFICA MARKDOWN:
-   - Usa '# ' per i titoli primari / macro-sezioni (Libri, Parti).
-   - Usa '## ' per i capitoli o sezioni intitolate.
-   - Usa '### ' per sottosezioni numerate o paragrafi tematici.
-   - Usa '> ' (blockquote) per lettere, citazioni d'autore, decreti, frammenti documentari o versi poetici.
-   - Usa il corsivo (*testo*) per titoli di opere e periodici citati e per parole o locuzioni in lingua straniera/latino rispetto alla lingua dominante del testo.
+3. GERARCHIA TIPOGRAFICA:
+   - Usa '# ' per titoli primari, '## ' per capitoli, '### ' per paragrafi numerati.
+   - Usa '> ' per citazioni diari, lettere, versi poetici o frammenti di documenti.
+   - Elimina numeri di pagina isolati e testatine ripetitive.
 
-4. FLUSSO CONTINUO PER E-READER:
-   - Elimina numeri di pagina isolati, testatine correnti e piè di pagina ripetitivi. Nessuna riga divisoria tra le pagine.
-
-5. RESTITUZIONE PURA:
-   - Restituisci ESCLUSIVAMENTE il testo trascritto e corretto in Markdown, senza preamboli, senza spiegazioni, senza commenti a margine.`;
+4. RESTITUZIONE PURA:
+   - Restituisci SOLO il testo pulito in Markdown, senza preamboli, note o saluti.`;
 
             const payload = {
-                contents: [{ parts: [{ text: text }] }],
+                contents: [{ parts: [{ text: batchText }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] }
             };
 
@@ -1127,13 +1102,23 @@ ISTRUZIONI DI ANALISI CONTESTUALE:
                     }
 
                     const resJson = await response.json();
-                    return resJson.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || text;
+                    return resJson.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || batchText;
                 } catch (e) {
                     if (i === 3) throw e;
                     await new Promise(r => setTimeout(r, retryDelay));
                     retryDelay *= 2;
                 }
             }
+        }
+
+        // Funzione Smart Filter: rileva se una pagina necessita veramente dell'AI o se è già pulita
+        function needsAiCleaning(text) {
+            if (text.length < 40) return false;
+            // Se contiene caratteri anomali o pattern tipici di scansione corrotta
+            if (/[?~=\|\{\}\\\/_\^]/.test(text)) return true;
+            // Se contiene probabili parole sillabate residue
+            if (/\b\w+-\s+\w+\b/.test(text)) return true;
+            return false;
         }
 
         mainActionBtn.addEventListener('click', async () => {
@@ -1146,16 +1131,19 @@ ISTRUZIONI DI ANALISI CONTESTUALE:
 
             const activeKey = apiKeyInput.value.trim();
             if (aiCorrectToggle.checked && !activeKey) {
-                showToast("Inserisci e salva la tua Chiave API!");
+                showToast("Inserisci e salva la tua Chiave API per usare l'AI!");
                 return;
             }
 
             const model = modelSelector.value;
             const delayTime = parseInt(delaySelector.value, 10);
+            const batchSize = parseInt(batchSizeSelector.value, 10);
+            const smartFilterActive = smartFilterSelector.value === 'enabled';
+            const detectFontItalics = detectFontItalicsCheck.checked;
 
             try {
                 isProcessing = true;
-                totalDehyphenatedCount = 0;
+                totalAiCalls = 0;
                 mainActionBtn.className = "main-btn processing";
                 mainActionBtn.querySelector('span').textContent = "Annulla";
                 progressContainer.classList.remove('hidden');
@@ -1163,7 +1151,6 @@ ISTRUZIONI DI ANALISI CONTESTUALE:
                 downloadMdBtn.classList.add('hidden');
                 downloadTxtBtn.classList.add('hidden');
                 copyBtn.classList.add('hidden');
-                detectedContextContainer.innerHTML = "";
 
                 startTime = Date.now();
                 timerInterval = setInterval(() => {
@@ -1187,11 +1174,11 @@ ISTRUZIONI DI ANALISI CONTESTUALE:
 
                         let rawPages = [];
 
-                        // FASE 1: Estrazione grezza riga per riga dal PDF
+                        // FASE 1: Estrazione con intercettazione avanzata del corsivo dai font PDF
                         for (let pageNum = startP; pageNum <= endP; pageNum++) {
                             if (!isProcessing) return;
 
-                            progressStatus.textContent = `Lettura pag. ${pageNum}...`;
+                            progressStatus.textContent = `Lettura font & testo pag. ${pageNum}...`;
                             const page = await pdfDoc.getPage(pageNum);
                             const textContent = await page.getTextContent();
                             
@@ -1204,7 +1191,24 @@ ISTRUZIONI DI ANALISI CONTESTUALE:
                                     lines.push(currentLine.trim());
                                     currentLine = "";
                                 }
-                                currentLine += item.str + " ";
+
+                                let tokenText = item.str;
+                                
+                                // Riconoscimento hardware/vettoriale del corsivo nei font del PDF
+                                if (detectFontItalics && tokenText.trim().length > 0) {
+                                    const fontNameLower = (item.fontName || "").toLowerCase();
+                                    const isItalicFont = fontNameLower.includes("italic") || 
+                                                         fontNameLower.includes("oblique") || 
+                                                         fontNameLower.includes("slant");
+                                    // transform[2] rappresenta il fattore di inclinazione (shear)
+                                    const isSkewed = item.transform && Math.abs(item.transform[2]) > 0.15;
+
+                                    if ((isItalicFont || isSkewed) && !tokenText.startsWith('*')) {
+                                        tokenText = `*${tokenText.trim()}* `;
+                                    }
+                                }
+
+                                currentLine += tokenText + " ";
                                 lastY = item.transform[5];
                             }
                             if (currentLine) lines.push(currentLine.trim());
@@ -1219,12 +1223,15 @@ ISTRUZIONI DI ANALISI CONTESTUALE:
 
                             let pageString = cleaned.join('\n');
 
-                            // De-sillabazione euristica preliminare
+                            // Pulizia corsivo adiacente duplicato (es. *parola* *altra* -> *parola altra*)
+                            pageString = pageString.replace(/\*\s+\*/g, ' ');
+
+                            // De-sillabazione euristica locale
                             if (dehyphenCheck.checked) {
                                 pageString = advancedUniversalDehyphenate(pageString);
                             }
 
-                            // Correzione artefatti grafici comuni
+                            // Correzione deterministica refusi OCR (0 Token)
                             if (dictCorrectionCheck.checked) {
                                 pageString = applyUniversalOcrCorrections(pageString);
                             }
@@ -1232,7 +1239,7 @@ ISTRUZIONI DI ANALISI CONTESTUALE:
                             rawPages.push(pageString);
 
                             const currentIndex = (pageNum - startP) + 1;
-                            const pcent = Math.round((currentIndex / pagesToProcess) * 50);
+                            const pcent = Math.round((currentIndex / pagesToProcess) * 40);
                             progressBar.style.width = pcent + "%";
                             progressPercent.textContent = pcent + "%";
                             pageCounter.textContent = `${currentIndex} di ${pagesToProcess}`;
@@ -1243,49 +1250,66 @@ ISTRUZIONI DI ANALISI CONTESTUALE:
                             rawPages = stitchCrossPageHyphens(rawPages);
                         }
 
-                        // FASE 3: Elaborazione e Formattazione Tipografica AI
-                        let processedPages = [];
-                        for (let i = 0; i < rawPages.length; i++) {
-                            if (!isProcessing) return;
+                        // FASE 3: Elaborazione Batch Salva-Costi con AI (oppure 100% Offline)
+                        let processedTextBlocks = [];
+                        
+                        if (!aiCorrectToggle.checked) {
+                            // Modalità 100% GRATUITA OFFLINE (Zero Chiamate AI)
+                            progressStatus.textContent = "Elaborazione offline completata a costo 0 €...";
+                            processedTextBlocks = rawPages;
+                            progressBar.style.width = "100%";
+                            progressPercent.textContent = "100%";
+                        } else {
+                            // Modalità AI con Batching intelligente
+                            let batchIndex = 0;
+                            while (batchIndex < rawPages.length) {
+                                if (!isProcessing) return;
 
-                            const actualPageNum = startP + i;
-                            let pageString = rawPages[i];
+                                const currentBatch = rawPages.slice(batchIndex, batchIndex + batchSize);
+                                const combinedText = currentBatch.join('\n\n');
+                                const batchPageStart = startP + batchIndex;
+                                const batchPageEnd = Math.min(startP + batchIndex + currentBatch.length - 1, endP);
 
-                            if (aiCorrectToggle.checked && pageString.trim().length > 15) {
-                                progressStatus.textContent = `Analisi & Tipografia AI pag. ${actualPageNum}...`;
-                                try {
-                                    pageString = await cleanPageWithGeminiUniversal(pageString, activeKey, model);
-                                    
-                                    // Controllo finale sulla de-sillabazione del testo formattato
-                                    if (dehyphenCheck.checked) {
-                                        pageString = advancedUniversalDehyphenate(pageString);
+                                let resultBlock = combinedText;
+
+                                // Smart Filter: salta la chiamata AI se il blocco è già pulito
+                                const shouldCallAi = !smartFilterActive || needsAiCleaning(combinedText);
+
+                                if (shouldCallAi && combinedText.trim().length > 30) {
+                                    progressStatus.textContent = `Revisione AI pagg. ${batchPageStart}-${batchPageEnd} (${model})...`;
+                                    try {
+                                        resultBlock = await cleanBatchWithGemini(combinedText, activeKey, model);
+                                        totalAiCalls++;
+                                        aiCallCounter.textContent = `Chiamate AI: ${totalAiCalls}`;
+                                    } catch (e) {
+                                        console.warn(`Fallback su testo locale per pagg. ${batchPageStart}-${batchPageEnd}: ${e.message}`);
                                     }
-                                    if (dictCorrectionCheck.checked) {
-                                        pageString = applyUniversalOcrCorrections(pageString);
+
+                                    if (delayTime > 0) {
+                                        await new Promise(r => setTimeout(r, delayTime));
                                     }
-                                } catch (e) {
-                                    console.warn(`Fallback su testo pulito per pag. ${actualPageNum}: ${e.message}`);
+                                } else {
+                                    // Risparmiata chiamata API grazie allo Smart Filter
+                                    console.log(`Pagine ${batchPageStart}-${batchPageEnd} pulite localmente (0 token).`);
                                 }
 
-                                if (delayTime > 0) {
-                                    await new Promise(r => setTimeout(r, delayTime));
-                                }
+                                processedTextBlocks.push(resultBlock);
+                                batchIndex += batchSize;
+
+                                const pcent = 40 + Math.round((batchIndex / rawPages.length) * 60);
+                                progressBar.style.width = Math.min(100, pcent) + "%";
+                                progressPercent.textContent = Math.min(100, pcent) + "%";
+                                pageCounter.textContent = `${Math.min(batchIndex, rawPages.length)} di ${pagesToProcess}`;
                             }
-
-                            processedPages.push(pageString);
-
-                            const currentStep = i + 1;
-                            const pcent = 50 + Math.round((currentStep / pagesToProcess) * 50);
-                            progressBar.style.width = pcent + "%";
-                            progressPercent.textContent = pcent + "%";
-                            pageCounter.textContent = `${currentStep} di ${pagesToProcess}`;
                         }
 
                         if (isProcessing) {
-                            extractedText = processedPages.join('\n\n');
+                            extractedText = processedTextBlocks.join('\n\n');
                             if (dehyphenCheck.checked) {
                                 extractedText = advancedUniversalDehyphenate(extractedText);
                             }
+                            // Pulizia corsivi rotti
+                            extractedText = extractedText.replace(/\*\s+\*/g, ' ');
                             extractedText = extractedText.replace(/\n{3,}/g, '\n\n');
                             showFinalResults();
                         }
@@ -1324,7 +1348,7 @@ ISTRUZIONI DI ANALISI CONTESTUALE:
             mainActionBtn.removeAttribute('disabled');
             mainActionBtn.className = "main-btn active";
             mainActionBtn.querySelector('span').textContent = "Carica Altro Volume";
-            showToast(`Completato! ${totalDehyphenatedCount} parole ricongiunte.`);
+            showToast(`Completato con successo! Chiamate AI effettuate: ${totalAiCalls}`);
         }
 
         function downloadFile(content, extension, mimeType) {
