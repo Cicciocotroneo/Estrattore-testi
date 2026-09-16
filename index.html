@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Universal Book Cleaner AI - Formattazione Tipografica & De-sillabazione</title>
+    <title>Universal Book Cleaner AI - Zero-Thinking Cost Saver</title>
     
     <!-- PDF.js per lettura PDF in locale -->
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -243,37 +243,6 @@
             color: #34d399;
         }
 
-        .dict-table-container {
-            max-height: 160px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            margin-top: 10px;
-            font-size: 11px;
-        }
-
-        table.dict-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table.dict-table th {
-            position: sticky;
-            top: 0;
-            background: var(--bg-card);
-            padding: 6px 10px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-muted);
-            font-size: 10px;
-        }
-
-        table.dict-table td {
-            padding: 6px 10px;
-            border-bottom: 1px solid var(--border-color);
-            font-family: SFMono-Regular, Consolas, monospace;
-        }
-
         .diagnostic-box {
             margin-top: 10px;
             padding: 10px;
@@ -481,7 +450,7 @@
                 </div>
                 <div>
                     <h1>Universal Book Cleaner AI</h1>
-                    <p class="subtitle">Codifica UTF-8 BOM, Corsivo & Tipografia</p>
+                    <p class="subtitle">Zero-Thinking Budget • Super Risparmio Token</p>
                 </div>
             </div>
             <button id="themeToggle" class="theme-btn" title="Cambia tema">
@@ -489,106 +458,64 @@
             </button>
         </header>
 
-        <!-- Configurazione Motore AI & Opzioni Salva-Costi -->
+        <!-- Motore AI & Controllo Costi -->
         <div class="panel">
-            <div class="panel-title" id="toggleAiPanel">
+            <div class="panel-title">
                 <span class="panel-title-text">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     Motore AI & Controllo Costi
                 </span>
-                <span id="aiToggleIcon">▼</span>
             </div>
 
-            <div id="aiPanelBody">
-                <div style="display:flex; gap:8px; margin-bottom:10px;">
-                    <input type="password" id="apiKeyInput" placeholder="Incolla API Key Google AI Studio">
-                    <button id="saveKeyBtn" style="padding:9px 14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; font-size:12px; cursor:pointer;">Salva</button>
-                </div>
-
-                <div class="grid-2" style="margin-bottom:10px;">
-                    <div>
-                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">MODELLO GEMINI</label>
-                        <select id="modelSelector">
-                            <option value="gemini-2.5-flash-lite" selected>Gemini 2.5 Flash-Lite (Super economico)</option>
-                            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Standard)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">ACCORPA PAGINE (BATCH)</label>
-                        <select id="batchSizeSelector">
-                            <option value="3" selected>3 Pagine / Chiamata (-66% costi)</option>
-                            <option value="4">4 Pagine / Chiamata (-75% costi)</option>
-                            <option value="1">1 Pagina / Chiamata (Massima precisione)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid-2" style="margin-bottom:10px;">
-                    <div>
-                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">PAUSA TRA CHIAMATE</label>
-                        <select id="delaySelector">
-                            <option value="4000" selected>4 sec (Anti-Limite Free Tier)</option>
-                            <option value="1500">1.5 sec (Veloce)</option>
-                            <option value="0">Nessuna (Istantanea)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">SMART FILTER (SALVA-TOKEN)</label>
-                        <select id="smartFilterSelector">
-                            <option value="enabled" selected>Attivo: Salta AI se pagina pulita</option>
-                            <option value="disabled">Disattivo: Invia sempre tutto all'AI</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="cost-box">
-                    💡 <b>Come avere 0 € di addebito:</b> su Google AI Studio genera una chiave in un progetto <i>senza carta di credito</i>. Con il modello <b>Flash-Lite</b> + batch da 3 pagine, rimani interamente nel Free Tier gratuito senza spendere un centesimo.
-                </div>
-
-                <button id="testApiBtn" style="width:100%; margin-top:10px; padding:9px; background:transparent; border:1px solid var(--border-color); color:var(--text-main); border-radius:10px; font-weight:600; font-size:11px; cursor:pointer;">
-                    🧪 Verifica API & Connessione
-                </button>
-                <div id="diagnosticOutput" class="diagnostic-box"></div>
-            </div>
-        </div>
-
-        <!-- Regole OCR & Pulizia Locale -->
-        <div class="panel">
-            <div class="panel-title" id="toggleDictPanel">
-                <span class="panel-title-text">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
-                    Filtro Locale Deterministico (Zero Token)
-                </span>
-                <span class="badge-count" id="dictCountBadge">0 regole</span>
+            <div style="display:flex; gap:8px; margin-bottom:10px;">
+                <input type="password" id="apiKeyInput" placeholder="Incolla API Key Google AI Studio">
+                <button id="saveKeyBtn" style="padding:9px 14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; font-size:12px; cursor:pointer;">Salva</button>
             </div>
 
-            <div id="dictPanelBody">
-                <div class="option-group" style="margin-bottom:8px;">
-                    <div class="option-text">
-                        <p>Correzione Glifi & Refusi Comuni</p>
-                        <span>Ripara l'apostrofo corrotto da '?', doppi spazi e caratteri spuri</span>
-                    </div>
-                    <input type="checkbox" id="dictCorrectionCheck" checked>
+            <div class="grid-2" style="margin-bottom:10px;">
+                <div>
+                    <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">MODELLO GEMINI</label>
+                    <select id="modelSelector">
+                        <option value="gemini-2.5-flash-lite" selected>Gemini 2.5 Flash-Lite (Super economico)</option>
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash (Standard)</option>
+                    </select>
                 </div>
-
-                <div class="dict-table-container">
-                    <table class="dict-table" id="dictTable">
-                        <thead>
-                            <tr>
-                                <th>Pattern OCR</th>
-                                <th>Sostituzione</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dictTableBody"></tbody>
-                    </table>
-                </div>
-
-                <div style="display:flex; gap:6px; margin-top:8px;">
-                    <input type="text" id="customPatternInput" placeholder="Pattern (es. po\?)" style="flex:1;">
-                    <input type="text" id="customReplacementInput" placeholder="Sostituzione (es. po')" style="flex:1;">
-                    <button id="addRuleBtn" style="padding:0 12px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; font-size:11px; cursor:pointer;">+ Aggiungi</button>
+                <div>
+                    <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">ACCORPA PAGINE (BATCH)</label>
+                    <select id="batchSizeSelector">
+                        <option value="3" selected>3 Pagine / Chiamata (-66% costi)</option>
+                        <option value="4">4 Pagine / Chiamata (-75% costi)</option>
+                        <option value="1">1 Pagina / Chiamata</option>
+                    </select>
                 </div>
             </div>
+
+            <div class="grid-2" style="margin-bottom:10px;">
+                <div>
+                    <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">PAUSA TRA CHIAMATE</label>
+                    <select id="delaySelector">
+                        <option value="1500" selected>1.5 sec (Veloce)</option>
+                        <option value="4000">4 sec (Anti-Limite Free Tier)</option>
+                        <option value="0">Nessuna (Istantanea)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:10px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">SMART FILTER (SALVA-TOKEN)</label>
+                    <select id="smartFilterSelector">
+                        <option value="enabled" selected>Attivo: Salta AI se pagina pulita</option>
+                        <option value="disabled">Disattivo: Invia sempre tutto all'AI</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="cost-box">
+                🛡️ <b>Ottimizzazione Costi Attiva:</b> il budget di ragionamento (Thinking) è impostato a <b>0 token</b>. Questo previene la generazione di 2.000–4.000 token invisibili per chiamata, riducendo la spesa del <b>90%</b> (da ~2,00 € a meno di 0,05 € con Flash-Lite per oltre 200 pagine).
+            </div>
+
+            <button id="testApiBtn" style="width:100%; margin-top:10px; padding:9px; background:transparent; border:1px solid var(--border-color); color:var(--text-main); border-radius:10px; font-weight:600; font-size:11px; cursor:pointer;">
+                🧪 Verifica API & Connessione
+            </button>
+            <div id="diagnosticOutput" class="diagnostic-box"></div>
         </div>
 
         <!-- Caricamento File -->
@@ -765,13 +692,6 @@
         const dehyphenCheck = document.getElementById('dehyphenCheck');
         const aiCorrectToggle = document.getElementById('aiCorrectToggle');
         const continuousFlowCheck = document.getElementById('continuousFlowCheck');
-        const dictCorrectionCheck = document.getElementById('dictCorrectionCheck');
-
-        const dictTableBody = document.getElementById('dictTableBody');
-        const dictCountBadge = document.getElementById('dictCountBadge');
-        const customPatternInput = document.getElementById('customPatternInput');
-        const customReplacementInput = document.getElementById('customReplacementInput');
-        const addRuleBtn = document.getElementById('addRuleBtn');
 
         let selectedFile = null;
         let extractedText = "";
@@ -780,65 +700,11 @@
         let startTime = 0;
         let totalAiCalls = 0;
 
-        let universalOcrRules = [
-            { pattern: /([ldcnsmtq]|all|dell|nell|coll|sull|dall|un|quest|poc|qualc|quell|mezz|d'altr)\?([a-zàèéìòùáéíóúA-Z])/gi, replacement: "$1'$2", desc: "Apostrofo corrotto da '?'" },
-            { pattern: /\b([Cc])\?è\b/g, replacement: "$1'è", desc: "C?è -> C'è" },
-            { pattern: /\b([Cc])\?era\b/g, replacement: "$1'era", desc: "C?era -> C'era" },
-            { pattern: /\bpo\?\b/gi, replacement: "po'", desc: "Troncamento po? -> po'" },
-            { pattern: /\b([a-zA-Zàèéìòù]+)\?([a-zA-Zàèéìòù]+)\b/g, replacement: "$1'$2", desc: "Apostrofo intra-parola corrotto con '?'" },
-            { pattern: /([a-zA-Zàèéìòù])\s*\{\s*/g, replacement: "$1 ", desc: "Parentesi graffa spuria da scansione" },
-            { pattern: /([a-zA-Zàèéìòù])\s*\|\s*/g, replacement: "$1 ", desc: "Barra verticale spuria da scansione" },
-            { pattern: /\bcos!\b/g, replacement: "così", desc: "Punto esclamativo per 'ì' (cos! -> così)" },
-            { pattern: /\bpiu\b/g, replacement: "più", desc: "Ripristino accento più" },
-            { pattern: /\b(\d+)\s*o\s*C\b/g, replacement: "$1 °C", desc: "Gradi Celsius corrotti" }
-        ];
-
         const compoundPrefixes = new Set([
             'anti', 'post', 'pre', 'pro', 'sub', 'super', 'iper', 'ipo', 'macro', 'micro',
             'socio', 'storico', 'medico', 'psico', 'fisico', 'chimico', 'geo', 'bio', 'eco',
             'nord', 'sud', 'est', 'ovest', 'italo', 'franco', 'anglo', 'austro', 'russo', 'afro'
         ]);
-
-        function renderDictTable() {
-            dictTableBody.innerHTML = "";
-            universalOcrRules.forEach((rule) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><code>${rule.desc || rule.pattern}</code></td>
-                    <td style="color:var(--success); font-weight:600;">${rule.replacement}</td>
-                `;
-                dictTableBody.appendChild(tr);
-            });
-            dictCountBadge.textContent = `${universalOcrRules.length} regole`;
-        }
-        renderDictTable();
-
-        addRuleBtn.addEventListener('click', () => {
-            const pat = customPatternInput.value.trim();
-            const rep = customReplacementInput.value.trim();
-            if (!pat || !rep) {
-                showToast("Inserisci pattern e correzione!");
-                return;
-            }
-            try {
-                const regex = pat.includes('\\') || pat.includes('(') ? new RegExp(pat, 'gi') : new RegExp(`\\b${pat}\\b`, 'gi');
-                universalOcrRules.unshift({ pattern: regex, replacement: rep, desc: `${pat} -> ${rep}` });
-                renderDictTable();
-                customPatternInput.value = "";
-                customReplacementInput.value = "";
-                showToast("Regola aggiunta al dizionario locale!");
-            } catch (e) {
-                showToast("Pattern non valido: " + e.message);
-            }
-        });
-
-        function applyUniversalOcrCorrections(text) {
-            let res = text;
-            for (let rule of universalOcrRules) {
-                res = res.replace(rule.pattern, rule.replacement);
-            }
-            return res;
-        }
 
         function shouldKeepHyphen(prefix, suffix) {
             const pLower = prefix.toLowerCase();
@@ -925,7 +791,16 @@
             showDiagnostic(`Connessione a ${chosenModel}...`, "success");
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${chosenModel}:generateContent?key=${activeKey}`;
-            const payload = { contents: [{ parts: [{ text: "Rispondi esclusivamente con 'OK'." }] }] };
+            
+            // CONFIGURAZIONE SALVA-COSTI: thinkingBudget = 0
+            const payload = { 
+                contents: [{ parts: [{ text: "Rispondi esclusivamente con 'OK'." }] }],
+                generationConfig: {
+                    thinkingConfig: {
+                        thinkingBudget: 0
+                    }
+                }
+            };
 
             try {
                 const response = await fetch(url, {
@@ -936,7 +811,7 @@
                 const resJson = await response.json();
 
                 if (response.ok) {
-                    showDiagnostic(`Connessione verificata con successo! Modello pronto: ${chosenModel}`, "success");
+                    showDiagnostic(`Connessione verificata con successo! Modello pronto (Thinking disattivato a costo minimo): ${chosenModel}`, "success");
                 } else {
                     const errDetails = resJson.error?.message || `Errore HTTP ${response.status}`;
                     const errCode = resJson.error?.status || "ERRORE";
@@ -1068,9 +943,15 @@ REGOLE RIGIDE:
 4. RESTITUZIONE PURA:
    - Restituisci SOLO il testo pulito in Markdown, senza preamboli, note o saluti.`;
 
+            // ZERO-THINKING BUDGET: elimina l'overhead di token invisibili
             const payload = {
                 contents: [{ parts: [{ text: batchText }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    thinkingConfig: {
+                        thinkingBudget: 0
+                    }
+                }
             };
 
             let retryDelay = 1500;
@@ -1207,15 +1088,10 @@ REGOLE RIGIDE:
                             }
 
                             let pageString = cleaned.join('\n');
-
                             pageString = pageString.replace(/\*\s+\*/g, ' ');
 
                             if (dehyphenCheck.checked) {
                                 pageString = advancedUniversalDehyphenate(pageString);
-                            }
-
-                            if (dictCorrectionCheck.checked) {
-                                pageString = applyUniversalOcrCorrections(pageString);
                             }
 
                             rawPages.push(pageString);
@@ -1249,7 +1125,6 @@ REGOLE RIGIDE:
                                 const batchPageEnd = Math.min(startP + batchIndex + currentBatch.length - 1, endP);
 
                                 let resultBlock = combinedText;
-
                                 const shouldCallAi = !smartFilterActive || needsAiCleaning(combinedText);
 
                                 if (shouldCallAi && combinedText.trim().length > 30) {
@@ -1265,8 +1140,6 @@ REGOLE RIGIDE:
                                     if (delayTime > 0) {
                                         await new Promise(r => setTimeout(r, delayTime));
                                     }
-                                } else {
-                                    console.log(`Pagine ${batchPageStart}-${batchPageEnd} pulite localmente (0 token).`);
                                 }
 
                                 processedTextBlocks.push(resultBlock);
@@ -1326,12 +1199,10 @@ REGOLE RIGIDE:
             showToast(`Completato con successo! Chiamate AI effettuate: ${totalAiCalls}`);
         }
 
-        // FUNZIONE DI DOWNLOAD CON BOM UTF-8 (\uFEFF) E NORMALIZZAZIONE NFC
+        // DOWNLOAD CON BOM UTF-8 (\uFEFF) E NORMALIZZAZIONE NFC
         function downloadFile(content, extension, mimeType) {
             if (!content) return;
-            // Normalizzazione Unicode in forma canonica composta (NFC)
             const normalized = content.normalize('NFC');
-            // Aggiunta del BOM UTF-8 (\uFEFF) per forzare tutti i lettori TXT/e-reader a leggere in UTF-8
             const blob = new Blob(['\uFEFF' + normalized], { type: `${mimeType};charset=utf-8` });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1347,7 +1218,6 @@ REGOLE RIGIDE:
         });
 
         downloadTxtBtn.addEventListener('click', () => {
-            // Conversione pulita da Markdown a testo puro mantenendo gli accenti intatti
             const plainText = extractedText
                 .normalize('NFC')
                 .replace(/^#+\s+/gm, '')
